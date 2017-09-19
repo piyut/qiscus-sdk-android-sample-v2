@@ -26,9 +26,13 @@ public class AlumniListActivity extends Activity{
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         ArrayList<Alumni> alumnis = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            alumnis.add(new Alumni(UUID.randomUUID().toString(),"name "+i,"email"+i, "job "+i));
-        }
+        alumnis.add(new Alumni("21dd","Andri Atmojo","andri@yahoo.com", "Freelance Android"));
+        alumnis.add(new Alumni("21ds","Joki Widyawan","joki@yahoo.com", "Freelance Web"));
+        alumnis.add(new Alumni("2eds","Eko Purnawan","eko@yahoo.com", "Freelance Web"));
+        alumnis.add(new Alumni("2gds","Susilo Andi S","silo@yahoo.com", "Freelance iOS"));
+        alumnis.add(new Alumni("3gds","Prakoso Binar","binar@yahoo.com", "Freelance Android"));
+        alumnis.add(new Alumni("53ds","Gilang Santoso","gilang@yahoo.com", "Freelance Web"));
+        alumnis.add(new Alumni("3tgs","Atmojo Rakoso","mojo@yahoo.com", "Freelance Backend"));
         mAdapter = new RecyclerAdapter(alumnis);
         mRecyclerView.setAdapter(mAdapter);
     }
