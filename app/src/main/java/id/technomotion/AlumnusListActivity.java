@@ -23,8 +23,8 @@ import okhttp3.Response;
  * Created by omayib on 18/09/17.
  */
 
-public class AlumniListActivity extends Activity{
-    private static final String TAG = "AlumniListActivity";
+public class AlumnusListActivity extends Activity{
+    private static final String TAG = "AlumnusListActivity";
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerAdapter mAdapter;
@@ -36,9 +36,9 @@ public class AlumniListActivity extends Activity{
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewAlumni);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        final ArrayList<Alumni> alumnis = new ArrayList<>();
+        final ArrayList<Person> alumnus = new ArrayList<>();
 
-        mAdapter = new RecyclerAdapter(alumnis);
+        mAdapter = new RecyclerAdapter(alumnus);
         mRecyclerView.setAdapter(mAdapter);
 
 
@@ -57,7 +57,7 @@ public class AlumniListActivity extends Activity{
                     JSONArray data = new JSONArray(response.body().string());
                     for (int i = 0; i < data.length(); i++) {
                         JSONObject obj = data.getJSONObject(i);
-                        alumnis.add(new Alumni(obj.getString("id"),obj.getString("name"),obj.getString("email"),obj.getString("work")));
+                        alumnus.add(new Person(obj.getString("id"),obj.getString("name"),obj.getString("email"),obj.getString("work")));
                     }
                     runOnUiThread(new Runnable() {
                         @Override
@@ -70,5 +70,7 @@ public class AlumniListActivity extends Activity{
                 }
             }
         });
+
+
     }
 }

@@ -2,13 +2,11 @@ package id.technomotion;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.qiscus.sdk.Qiscus;
-import com.qiscus.sdk.data.model.QiscusChatRoom;
 import com.squareup.picasso.Picasso;
 
 import java.util.UUID;
@@ -18,14 +16,14 @@ import java.util.UUID;
  * Created by omayib on 18/09/17.
  */
 
-public class AlumniHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    private static final String TAG = "AlumniHolder";
+public class AlumnusHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private static final String TAG = "AlumnusHolder";
     private TextView itemName;
     private TextView itemJob;
     private ImageView picture;
-    private Alumni selectedAlumni;
+    private Person selectedPerson;
 
-    public AlumniHolder(View itemView) {
+    public AlumnusHolder(View itemView) {
         super(itemView);
         itemName = (TextView) itemView.findViewById(R.id.textViewName);
         itemJob = (TextView) itemView.findViewById(R.id.textViewJob);
@@ -33,10 +31,10 @@ public class AlumniHolder extends RecyclerView.ViewHolder implements View.OnClic
         itemView.setOnClickListener(this);
     }
 
-    public void bindAlumni(Alumni alumni){
-        this.selectedAlumni = alumni;
-        this.itemName.setText(alumni.getName());
-        this.itemJob.setText(alumni.getJob());
+    public void bindAlumni(Person person){
+        this.selectedPerson = person;
+        this.itemName.setText(person.getName());
+        this.itemJob.setText(person.getJob());
         Picasso.with(this.picture.getContext()).load("http://lorempixel.com/200/200/people/"+ UUID.randomUUID().toString()).into(picture);
     }
 
