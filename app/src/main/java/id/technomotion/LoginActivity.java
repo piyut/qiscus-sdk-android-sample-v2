@@ -198,7 +198,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         public void onSuccess(QiscusAccount qiscusAccount) {
                             Log.d(TAG, "onSuccess: ");
                             showProgress(false);
-                            startActivity(new Intent(LoginActivity.this, AlumniListActivity.class));
+                            startActivity(new Intent(LoginActivity.this, AlumnusListActivity.class));
                         }
 
                         @Override
