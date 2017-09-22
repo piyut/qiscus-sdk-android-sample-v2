@@ -9,8 +9,7 @@ import io.realm.annotations.Required;
  */
 
 public class PersonPersistance extends RealmObject{
-    @Required
-    @PrimaryKey
+
     private String id;
     private String name;
     private String email;

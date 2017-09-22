@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import id.technomotion.db.PersonPersistance;
 import io.realm.Realm;
@@ -50,12 +51,12 @@ public class AlumnusListActivity extends Activity{
         mAdapter = new RecyclerAdapter(alumnus);
         mRecyclerView.setAdapter(mAdapter);
 
-        alumnus = loadDataFromLocal();
+        alumnus.addAll(loadDataFromLocal());
         mAdapter.notifyDataSetChanged();
+
         if (alumnus.isEmpty()){
             loadDataFromServer();
         }
-
     }
 
     private void loadDataFromServer() {
@@ -75,6 +76,7 @@ public class AlumnusListActivity extends Activity{
                     JSONArray data = new JSONArray(response.body().string());
                     for (int i = 0; i < data.length(); i++) {
                         JSONObject obj = data.getJSONObject(i);
+                        Log.d(TAG, "onResponse: "+obj.toString());
                         alumnus.add(new Person(obj.getString("id"),obj.getString("name"),obj.getString("email"),obj.getString("work")));
                     }
                     runOnUiThread(new Runnable() {
