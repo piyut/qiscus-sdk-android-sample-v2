@@ -25,4 +25,12 @@ public class Person {
     public String getJob() {
         return job;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 }
