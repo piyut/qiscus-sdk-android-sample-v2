@@ -35,7 +35,7 @@ public class AlumnusListActivity extends Activity{
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerAdapter mAdapter;
     private Realm realm;
-    private ArrayList<Person> alumnus;
+    private ArrayList<Person> alumnus = new ArrayList<>();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,17 +46,28 @@ public class AlumnusListActivity extends Activity{
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewAlumni);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        alumnus = new ArrayList<>();
 
         mAdapter = new RecyclerAdapter(alumnus);
         mRecyclerView.setAdapter(mAdapter);
 
-        alumnus.addAll(loadDataFromLocal());
-        mAdapter.notifyDataSetChanged();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         if (alumnus.isEmpty()){
-            loadDataFromServer();
+            alumnus.addAll(loadDataFromLocal());
+            if (alumnus.isEmpty()){
+                loadDataFromServer();
+            }
+        }else{
+            Log.d(TAG, "onResume: load data from cache");
         }
+        mAdapter.notifyDataSetChanged();
+
+
     }
 
     private void loadDataFromServer() {
