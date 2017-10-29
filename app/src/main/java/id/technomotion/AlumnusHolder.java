@@ -41,18 +41,19 @@ public class AlumnusHolder extends RecyclerView.ViewHolder implements View.OnCli
     @Override
     public void onClick(final View v) {
         v.getContext().startActivity(new Intent(v.getContext(),OtherActivity.class));
-//        Qiscus.buildChatWith("andri@gmail.com")
-//                .withSubtitle("Consultation")
-//                .build(v.getContext(), new Qiscus.ChatActivityBuilderListener() {
-//                    @Override
-//                    public void onSuccess(Intent intent) {
-//                        v.getContext().startActivity(intent);
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable throwable) {
-//
-//                    }
-//                });
+        Qiscus.buildChatWith(this.selectedPerson.getEmail())
+                .withSubtitle("Consultation")
+                .build(v.getContext(), new Qiscus.ChatActivityBuilderListener() {
+                    @Override
+                    public void onSuccess(Intent intent) {
+                        v.getContext().startActivity(intent);
+                        ((AlumnusListActivity)v.getContext()).finish();
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                });
     }
 }
