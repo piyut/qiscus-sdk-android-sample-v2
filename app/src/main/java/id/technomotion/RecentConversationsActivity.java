@@ -3,6 +3,7 @@ package id.technomotion;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +27,8 @@ public class RecentConversationsActivity extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
     private ArrayList<Room> rooms = new ArrayList<>();
     private RecentConversationRecyclerAdapter adapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +37,8 @@ public class RecentConversationsActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerRecentConversation);
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
 
         fabCreateNewConversation = (FloatingActionButton) findViewById(R.id.buttonCreateNewConversation);
         fabCreateNewConversation.setOnClickListener(new View.OnClickListener() {
@@ -47,6 +52,18 @@ public class RecentConversationsActivity extends AppCompatActivity {
         adapter = new RecentConversationRecyclerAdapter(rooms);
         recyclerView.setAdapter(adapter);
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                reloadRecentConversation();
+            }
+        });
+
+        reloadRecentConversation();
+    }
+
+    public void reloadRecentConversation(){
+        swipeRefreshLayout.setRefreshing(true);
         QiscusApi.getInstance().getChatRooms(1, 20, true)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -55,19 +72,24 @@ public class RecentConversationsActivity extends AppCompatActivity {
                     public void onCompleted() {
                         Log.d(TAG, "onCompleted: ");
                         adapter.notifyDataSetChanged();
+                        swipeRefreshLayout.setRefreshing(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
-
+                        swipeRefreshLayout.setRefreshing(false);
                     }
 
                     @Override
                     public void onNext(List<QiscusChatRoom> qiscusChatRooms) {
                         Log.d(TAG, "onNext: size" +qiscusChatRooms.size());
                         for (int i = 0; i < qiscusChatRooms.size(); i++) {
-                            rooms.add(new Room(qiscusChatRooms.get(i).getId(),qiscusChatRooms.get(i).getName()));
+                            Room room = new Room(qiscusChatRooms.get(i).getId(),qiscusChatRooms.get(i).getName());
+                            room.setLatestConversation(qiscusChatRooms.get(i).getLastComment().getMessage());
+                            if (!rooms.contains(room)){
+                                rooms.add(room);
+                            }
                         }
                     }
                 });

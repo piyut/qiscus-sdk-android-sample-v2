@@ -37,10 +37,10 @@ public class RecentConversationHolder extends RecyclerView.ViewHolder implements
         itemView.setOnClickListener(this);
     }
 
-    public void bindAlumni(Room room){
+    public void bindRecentConversation(Room room){
         this.selectedRoom = room;
         this.itemName.setText(room.getName());
-//        this.itemJob.setText(room.getJob());
+        this.itemJob.setText(room.getLatestConversation());
         Picasso.with(this.picture.getContext()).load("http://lorempixel.com/200/200/people/"+ UUID.randomUUID().toString()).into(picture);
     }
 

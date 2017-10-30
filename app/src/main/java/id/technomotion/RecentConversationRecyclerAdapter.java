@@ -27,7 +27,7 @@ public class RecentConversationRecyclerAdapter extends RecyclerView.Adapter<Rece
     @Override
     public void onBindViewHolder(RecentConversationHolder holder, int position) {
         Room room = rooms.get(position);
-        holder.bindAlumni(room);
+        holder.bindRecentConversation(room);
     }
 
     @Override
