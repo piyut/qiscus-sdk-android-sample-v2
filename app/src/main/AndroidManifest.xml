@@ -25,7 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AlumnusListActivity" />
+        <activity android:name=".ContactsActivity" />
         <activity android:name=".OtherActivity" />
         <activity android:name=".RecentConversationsActivity"></activity>
     </application>

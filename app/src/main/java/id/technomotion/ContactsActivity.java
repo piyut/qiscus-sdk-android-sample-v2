@@ -17,8 +17,8 @@ import id.technomotion.repository.RepositoryTransactionListener;
  * Created by omayib on 18/09/17.
  */
 
-public class AlumnusListActivity extends Activity implements RepositoryTransactionListener {
-    private static final String TAG = "AlumnusListActivity";
+public class ContactsActivity extends Activity implements RepositoryTransactionListener {
+    private static final String TAG = "ContactsActivity";
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerAdapter mAdapter;
@@ -36,7 +36,6 @@ public class AlumnusListActivity extends Activity implements RepositoryTransacti
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewAlumni);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
-
         alumnusRepository = new AlumnusRepository();
         alumnusRepository.setListener(this);
 

@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<AlumnusHolder> {
+public class RecyclerAdapter extends RecyclerView.Adapter<ContactHolder> {
     private ArrayList<Person> mPhotos;
 
     public RecyclerAdapter(ArrayList<Person> mPhotos) {
@@ -15,13 +15,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<AlumnusHolder> {
     }
 
     @Override
-    public AlumnusHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ContactHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View inflatedView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_alumni, parent, false);
-        return new AlumnusHolder(inflatedView);
+        return new ContactHolder(inflatedView);
     }
 
     @Override
-    public void onBindViewHolder(AlumnusHolder holder, int position) {
+    public void onBindViewHolder(ContactHolder holder, int position) {
         Person person = mPhotos.get(position);
         holder.bindAlumni(person);
     }

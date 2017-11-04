@@ -16,14 +16,14 @@ import java.util.UUID;
  * Created by omayib on 18/09/17.
  */
 
-public class AlumnusHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    private static final String TAG = "AlumnusHolder";
+public class ContactHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private static final String TAG = "ContactHolder";
     private TextView itemName;
     private TextView itemJob;
     private ImageView picture;
     private Person selectedPerson;
 
-    public AlumnusHolder(View itemView) {
+    public ContactHolder(View itemView) {
         super(itemView);
         itemName = (TextView) itemView.findViewById(R.id.textViewName);
         itemJob = (TextView) itemView.findViewById(R.id.textViewJob);
@@ -47,7 +47,7 @@ public class AlumnusHolder extends RecyclerView.ViewHolder implements View.OnCli
                     @Override
                     public void onSuccess(Intent intent) {
                         v.getContext().startActivity(intent);
-                        ((AlumnusListActivity)v.getContext()).finish();
+                        ((ContactsActivity)v.getContext()).finish();
                     }
 
                     @Override

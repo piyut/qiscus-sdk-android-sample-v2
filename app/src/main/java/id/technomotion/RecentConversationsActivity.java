@@ -44,7 +44,7 @@ public class RecentConversationsActivity extends AppCompatActivity {
         fabCreateNewConversation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(RecentConversationsActivity.this, AlumnusListActivity.class);
+                Intent intent = new Intent(RecentConversationsActivity.this, ContactsActivity.class);
                 startActivity(intent);
             }
         });

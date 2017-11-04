@@ -23,7 +23,7 @@ import rx.schedulers.Schedulers;
  */
 
 public class RecentConversationHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    private static final String TAG = "AlumnusHolder";
+    private static final String TAG = "ContactHolder";
     private TextView itemName;
     private TextView itemJob;
     private ImageView picture;
