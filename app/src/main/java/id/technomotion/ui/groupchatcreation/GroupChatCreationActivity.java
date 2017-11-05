@@ -1,14 +1,19 @@
 package id.technomotion.ui.groupchatcreation;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
+
+import com.qiscus.sdk.Qiscus;
+import com.qiscus.sdk.data.model.QiscusChatRoom;
+import com.qiscus.sdk.ui.QiscusGroupChatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +27,7 @@ import id.technomotion.repository.RepositoryTransactionListener;
  * Created by omayib on 05/11/17.
  */
 
-public class GroupChatCreationActivity extends AppCompatActivity implements RepositoryTransactionListener, ViewHolder.OnContactClickedListener {
+public class GroupChatCreationActivity extends Activity implements RepositoryTransactionListener, ViewHolder.OnContactClickedListener, View.OnClickListener, GroupNameDialogFragment.OnGroupNameCreatedListener {
     private static final String TAG = "GroupChatCreationActivity";
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
@@ -30,6 +35,8 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
     private ArrayList<Person> alumnusList;
     private AlumnusRepository alumnusRepository;
     private View viewGroupCreation;
+    private ArrayList<String> contacts = new ArrayList<>();
+    private FloatingActionButton nextFab;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,6 +48,7 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
         toolbar.setTitle("Select contact");
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
 
+        nextFab = (FloatingActionButton) findViewById(R.id.nextFloatingButton);
         viewGroupCreation = findViewById(R.id.newGroupLayout);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewAlumni);
         mLinearLayoutManager = new LinearLayoutManager(this);
@@ -52,7 +60,27 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
 
 
         viewGroupCreation.setVisibility(View.GONE);
+        nextFab.setVisibility(View.VISIBLE);
+        nextFab.setOnClickListener(this);
     }
+
+
+    @SuppressLint("LongLogTag")
+    private void createGroupChat(String groupName) {
+        Qiscus.buildGroupChatRoom(groupName,contacts).build(new Qiscus.ChatBuilderListener() {
+            @Override
+            public void onSuccess(QiscusChatRoom qiscusChatRoom) {
+                startActivity(QiscusGroupChatActivity.generateIntent(GroupChatCreationActivity.this, qiscusChatRoom));
+                finish();
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        });
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -72,12 +100,31 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
     @SuppressLint("LongLogTag")
     @Override
     public void onContactSelected(String userEmail) {
-        Log.d(TAG, "onContactSelected() called with: userEmail = [" + userEmail + "]");
+        if (!contacts.contains(userEmail))contacts.add(userEmail);
     }
 
     @SuppressLint("LongLogTag")
     @Override
     public void onContactUnselected(String userEmail) {
-        Log.d(TAG, "onContactUnselected() called with: userEmail = [" + userEmail + "]");
+        if(contacts.contains(userEmail))contacts.remove(userEmail);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (selectedContactIsMoreThanOne()){
+            GroupNameDialogFragment dialogFragment = new GroupNameDialogFragment(this);
+            dialogFragment.show(getFragmentManager(),"show_group_name");
+        }else{
+            Toast.makeText(this, "select more than one", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean selectedContactIsMoreThanOne(){
+        return this.contacts.size() > 1;
+    }
+
+    @Override
+    public void onGroupNameCreated(String groupName) {
+        createGroupChat(groupName);
     }
 }
