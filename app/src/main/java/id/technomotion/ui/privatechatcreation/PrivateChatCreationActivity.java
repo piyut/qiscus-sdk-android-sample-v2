@@ -1,6 +1,8 @@
 package id.technomotion.ui.privatechatcreation;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -74,21 +76,37 @@ public class PrivateChatCreationActivity extends Activity implements RepositoryT
     }
 
     @Override
-    public void onContactClicked(String userEmail) {
-        Qiscus.buildChatWith(userEmail)
-                .withSubtitle("Consultation")
-                .build(this, new Qiscus.ChatActivityBuilderListener() {
+    public void onContactClicked(final String userEmail) {
+        new AlertDialog.Builder(this)
+                .setTitle("Confirmation")
+                .setMessage("Are you sure to make a conversation with "+userEmail+" ?")
+                .setCancelable(true)
+                .setPositiveButton("yes", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onSuccess(Intent intent) {
-                        startActivity(intent);
-                        finish();
-                    }
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Qiscus.buildChatWith(userEmail)
+                                .withSubtitle("Consultation")
+                                .build(PrivateChatCreationActivity.this, new Qiscus.ChatActivityBuilderListener() {
+                                    @Override
+                                    public void onSuccess(Intent intent) {
+                                        startActivity(intent);
+                                        finish();
+                                    }
 
-                    @Override
-                    public void onError(Throwable throwable) {
-                        throwable.printStackTrace();
+                                    @Override
+                                    public void onError(Throwable throwable) {
+                                        throwable.printStackTrace();
+                                    }
+                                });
                     }
-                });
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).show();
+
     }
 
     @Override
