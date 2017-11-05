@@ -11,7 +11,7 @@ import com.squareup.picasso.Picasso;
 import java.util.UUID;
 
 import id.technomotion.R;
-import id.technomotion.model.Person;
+import id.technomotion.model.SelectableContact;
 
 /**
  * Created by omayib on 05/11/17.
@@ -22,11 +22,11 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private TextView itemName;
     private TextView itemJob;
     private ImageView picture;
-    private Person selectedContact;
+    private SelectableContact selectedContact;
     private CheckBox checkBox;
-    private final id.technomotion.ui.privatechatcreation.ViewHolder.OnContactClickedListener listener;
+    private final ViewHolder.OnContactClickedListener listener;
 
-    public ViewHolder(View itemView, id.technomotion.ui.privatechatcreation.ViewHolder.OnContactClickedListener listener) {
+    public ViewHolder(View itemView, ViewHolder.OnContactClickedListener listener) {
         super(itemView);
         checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);
         itemName = (TextView) itemView.findViewById(R.id.textViewName);
@@ -37,7 +37,8 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         itemView.setOnClickListener(this);
     }
 
-    public void bindAlumni(Person person){
+    public void bindAlumni(SelectableContact person){
+        this.checkBox.setChecked(person.isSelected());
         this.selectedContact = person;
         this.itemName.setText(person.getName());
         this.itemJob.setText(person.getJob());
@@ -46,10 +47,18 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     @Override
     public void onClick(final View v) {
-        this.listener.onContactClicked(this.selectedContact.getEmail());
+        this.checkBox.setChecked(!this.selectedContact.isSelected());
+        this.selectedContact.setSelected(this.checkBox.isChecked());
+
+        if(this.checkBox.isChecked()){
+            this.listener.onContactSelected(this.selectedContact.getEmail());
+        }else{
+            this.listener.onContactUnselected(this.selectedContact.getEmail());
+        }
     }
 
     public interface OnContactClickedListener{
-        public void onContactClicked(String userEmail);
+        void onContactSelected(String userEmail);
+        void onContactUnselected(String userEmail);
     }
 }

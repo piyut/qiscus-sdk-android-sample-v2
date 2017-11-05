@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.qiscus.sdk.Qiscus;
 
@@ -17,18 +18,21 @@ import id.technomotion.R;
 import id.technomotion.model.Person;
 import id.technomotion.repository.AlumnusRepository;
 import id.technomotion.repository.RepositoryTransactionListener;
+import id.technomotion.ui.groupchatcreation.GroupChatCreationActivity;
 
 /**
  * Created by omayib on 18/09/17.
  */
 
-public class PrivateChatCreationActivity extends Activity implements RepositoryTransactionListener, ViewHolder.OnContactClickedListener {
+public class PrivateChatCreationActivity extends Activity implements RepositoryTransactionListener, ViewHolder.OnContactClickedListener, View.OnClickListener {
     private static final String TAG = "PrivateChatCreationActivity";
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerAdapter mAdapter;
     private ArrayList<Person> alumnusList;
     private AlumnusRepository alumnusRepository;
+    private View viewGroupCreation;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +42,7 @@ public class PrivateChatCreationActivity extends Activity implements RepositoryT
         toolbar.setTitle("Select contact");
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
 
+        viewGroupCreation = findViewById(R.id.newGroupLayout);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewAlumni);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -48,6 +53,7 @@ public class PrivateChatCreationActivity extends Activity implements RepositoryT
         mAdapter = new RecyclerAdapter(alumnusList, this);
         mRecyclerView.setAdapter(mAdapter);
 
+        viewGroupCreation.setOnClickListener(this);
     }
 
     @Override
@@ -83,5 +89,11 @@ public class PrivateChatCreationActivity extends Activity implements RepositoryT
                         throwable.printStackTrace();
                     }
                 });
+    }
+
+    @Override
+    public void onClick(View view) {
+        startActivity(new Intent(this, GroupChatCreationActivity.class));
+        finish();
     }
 }

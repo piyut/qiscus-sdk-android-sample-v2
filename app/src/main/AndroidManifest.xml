@@ -26,7 +26,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.privatechatcreation.PrivateChatCreationActivity" />
-        <activity android:name=".ui.recentconversation.RecentConversationsActivity"></activity>
+        <activity android:name=".ui.recentconversation.RecentConversationsActivity" />
+        <activity android:name=".ui.groupchatcreation.GroupChatCreationActivity"></activity>
     </application>
 
 </manifest>
