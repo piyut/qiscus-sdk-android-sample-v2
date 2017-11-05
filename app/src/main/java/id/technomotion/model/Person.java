@@ -1,4 +1,4 @@
-package id.technomotion;
+package id.technomotion.model;
 
 /**
  * Created by omayib on 18/09/17.

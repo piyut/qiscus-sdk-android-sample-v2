@@ -1,9 +1,8 @@
 package id.technomotion.repository;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import id.technomotion.Person;
+import id.technomotion.model.Person;
 
 /**
  * Created by omayib on 22/09/17.

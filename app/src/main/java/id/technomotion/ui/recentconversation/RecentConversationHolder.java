@@ -1,4 +1,4 @@
-package id.technomotion;
+package id.technomotion.ui.recentconversation;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +14,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.UUID;
 
+import id.technomotion.R;
+import id.technomotion.model.Room;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;

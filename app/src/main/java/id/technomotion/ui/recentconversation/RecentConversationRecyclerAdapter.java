@@ -1,4 +1,4 @@
-package id.technomotion;
+package id.technomotion.ui.recentconversation;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,6 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+
+import id.technomotion.R;
+import id.technomotion.model.Room;
 
 /**
  * Created by omayib on 30/10/17.

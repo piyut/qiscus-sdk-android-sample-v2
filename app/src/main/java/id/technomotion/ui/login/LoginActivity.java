@@ -1,4 +1,4 @@
-package id.technomotion;
+package id.technomotion.ui.login;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -34,6 +34,9 @@ import com.qiscus.sdk.data.model.QiscusAccount;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import id.technomotion.R;
+import id.technomotion.ui.recentconversation.RecentConversationsActivity;
 
 import static android.Manifest.permission.READ_CONTACTS;
 /*

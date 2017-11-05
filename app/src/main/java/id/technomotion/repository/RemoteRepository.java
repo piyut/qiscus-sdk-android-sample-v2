@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import id.technomotion.Person;
+import id.technomotion.model.Person;
 import okhttp3.OkHttpClient;
 
 /**

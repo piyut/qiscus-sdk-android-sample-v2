@@ -1,4 +1,4 @@
-package id.technomotion;
+package id.technomotion.ui.recentconversation;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +16,9 @@ import com.qiscus.sdk.data.remote.QiscusApi;
 import java.util.ArrayList;
 import java.util.List;
 
+import id.technomotion.ui.contact.ContactsActivity;
+import id.technomotion.R;
+import id.technomotion.model.Room;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;

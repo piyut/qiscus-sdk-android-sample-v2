@@ -1,12 +1,9 @@
 package id.technomotion.repository;
 
-import android.content.Context;
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import id.technomotion.Person;
+import id.technomotion.model.Person;
 import id.technomotion.db.PersonPersistance;
 import io.realm.Realm;
 import io.realm.RealmResults;

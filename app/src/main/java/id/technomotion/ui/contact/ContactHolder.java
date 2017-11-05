@@ -1,4 +1,4 @@
-package id.technomotion;
+package id.technomotion.ui.contact;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +11,9 @@ import com.qiscus.sdk.Qiscus;
 import com.squareup.picasso.Picasso;
 
 import java.util.UUID;
+
+import id.technomotion.R;
+import id.technomotion.model.Person;
 
 
 /**

@@ -1,4 +1,4 @@
-package id.technomotion;
+package id.technomotion.ui.contact;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import java.util.ArrayList;
 import java.util.List;
 
+import id.technomotion.R;
+import id.technomotion.model.Person;
 import id.technomotion.repository.AlumnusRepository;
 import id.technomotion.repository.RepositoryTransactionListener;
 
