@@ -1,11 +1,14 @@
 package id.technomotion.ui.contact;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+
+import com.qiscus.sdk.Qiscus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +22,7 @@ import id.technomotion.repository.RepositoryTransactionListener;
  * Created by omayib on 18/09/17.
  */
 
-public class ContactsActivity extends Activity implements RepositoryTransactionListener {
+public class ContactsActivity extends Activity implements RepositoryTransactionListener, ContactHolder.OnContactClickedListener {
     private static final String TAG = "ContactsActivity";
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
@@ -42,7 +45,7 @@ public class ContactsActivity extends Activity implements RepositoryTransactionL
         alumnusRepository.setListener(this);
 
         alumnusList = alumnusRepository.getCachedData();
-        mAdapter = new ContactRecyclerAdapter(alumnusList);
+        mAdapter = new ContactRecyclerAdapter(alumnusList, this);
         mRecyclerView.setAdapter(mAdapter);
 
     }
@@ -62,5 +65,23 @@ public class ContactsActivity extends Activity implements RepositoryTransactionL
             }
         });
 
+    }
+
+    @Override
+    public void onContactClicked(String userEmail) {
+        Qiscus.buildChatWith(userEmail)
+                .withSubtitle("Consultation")
+                .build(this, new Qiscus.ChatActivityBuilderListener() {
+                    @Override
+                    public void onSuccess(Intent intent) {
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                });
     }
 }

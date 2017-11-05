@@ -1,13 +1,11 @@
 package id.technomotion.ui.contact;
 
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.qiscus.sdk.Qiscus;
 import com.squareup.picasso.Picasso;
 
 import java.util.UUID;
@@ -27,13 +25,15 @@ public class ContactHolder extends RecyclerView.ViewHolder implements View.OnCli
     private ImageView picture;
     private Person selectedContact;
     private CheckBox checkBox;
+    private final OnContactClickedListener listener;
 
-    public ContactHolder(View itemView) {
+    public ContactHolder(View itemView, OnContactClickedListener listener) {
         super(itemView);
         checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);
         itemName = (TextView) itemView.findViewById(R.id.textViewName);
         itemJob = (TextView) itemView.findViewById(R.id.textViewJob);
         picture = (ImageView) itemView.findViewById(R.id.imageViewProfile);
+        this.listener = listener;
 
         itemView.setOnClickListener(this);
         checkBox.setVisibility(View.GONE);
@@ -48,19 +48,10 @@ public class ContactHolder extends RecyclerView.ViewHolder implements View.OnCli
 
     @Override
     public void onClick(final View v) {
-        Qiscus.buildChatWith(this.selectedContact.getEmail())
-                .withSubtitle("Consultation")
-                .build(v.getContext(), new Qiscus.ChatActivityBuilderListener() {
-                    @Override
-                    public void onSuccess(Intent intent) {
-                        v.getContext().startActivity(intent);
-                        ((ContactsActivity)v.getContext()).finish();
-                    }
+        this.listener.onContactClicked(this.selectedContact.getEmail());
+    }
 
-                    @Override
-                    public void onError(Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                });
+    public interface OnContactClickedListener{
+        public void onContactClicked(String userEmail);
     }
 }

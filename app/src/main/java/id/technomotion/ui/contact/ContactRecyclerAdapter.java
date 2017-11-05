@@ -12,15 +12,17 @@ import id.technomotion.model.Person;
 
 public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactHolder> {
     private final ArrayList<Person> persons;
+    private final ContactHolder.OnContactClickedListener listener;
 
-    public ContactRecyclerAdapter(ArrayList<Person> mPhotos) {
-        this.persons = mPhotos;
+    public ContactRecyclerAdapter(ArrayList<Person> persons, ContactHolder.OnContactClickedListener listener) {
+        this.persons = persons;
+        this.listener = listener;
     }
 
     @Override
     public ContactHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View inflatedView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_alumni, parent, false);
-        return new ContactHolder(inflatedView);
+        return new ContactHolder(inflatedView, listener);
     }
 
     @Override
