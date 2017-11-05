@@ -7,11 +7,11 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<ContactHolder> {
-    private ArrayList<Person> mPhotos;
+public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactHolder> {
+    private final ArrayList<Person> persons;
 
-    public RecyclerAdapter(ArrayList<Person> mPhotos) {
-        this.mPhotos = mPhotos;
+    public ContactRecyclerAdapter(ArrayList<Person> mPhotos) {
+        this.persons = mPhotos;
     }
 
     @Override
@@ -22,12 +22,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<ContactHolder> {
 
     @Override
     public void onBindViewHolder(ContactHolder holder, int position) {
-        Person person = mPhotos.get(position);
+        Person person = persons.get(position);
         holder.bindAlumni(person);
     }
 
     @Override
     public int getItemCount() {
-        return this.mPhotos.size();
+        return this.persons.size();
     }
+
+
 }

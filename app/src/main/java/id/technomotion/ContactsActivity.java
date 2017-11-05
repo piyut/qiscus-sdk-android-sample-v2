@@ -21,7 +21,7 @@ public class ContactsActivity extends Activity implements RepositoryTransactionL
     private static final String TAG = "ContactsActivity";
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
-    private RecyclerAdapter mAdapter;
+    private ContactRecyclerAdapter mAdapter;
     private ArrayList<Person> alumnusList;
     private AlumnusRepository alumnusRepository;
     @Override
@@ -40,7 +40,7 @@ public class ContactsActivity extends Activity implements RepositoryTransactionL
         alumnusRepository.setListener(this);
 
         alumnusList = alumnusRepository.getCachedData();
-        mAdapter = new RecyclerAdapter(alumnusList);
+        mAdapter = new ContactRecyclerAdapter(alumnusList);
         mRecyclerView.setAdapter(mAdapter);
 
     }
