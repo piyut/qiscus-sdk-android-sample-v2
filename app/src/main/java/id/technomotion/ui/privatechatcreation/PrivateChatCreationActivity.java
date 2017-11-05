@@ -1,4 +1,4 @@
-package id.technomotion.ui.contact;
+package id.technomotion.ui.privatechatcreation;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -22,11 +22,11 @@ import id.technomotion.repository.RepositoryTransactionListener;
  * Created by omayib on 18/09/17.
  */
 
-public class ContactsActivity extends Activity implements RepositoryTransactionListener, ContactHolder.OnContactClickedListener {
-    private static final String TAG = "ContactsActivity";
+public class PrivateChatCreationActivity extends Activity implements RepositoryTransactionListener, ViewHolder.OnContactClickedListener {
+    private static final String TAG = "PrivateChatCreationActivity";
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
-    private ContactRecyclerAdapter mAdapter;
+    private RecyclerAdapter mAdapter;
     private ArrayList<Person> alumnusList;
     private AlumnusRepository alumnusRepository;
     @Override
@@ -45,7 +45,7 @@ public class ContactsActivity extends Activity implements RepositoryTransactionL
         alumnusRepository.setListener(this);
 
         alumnusList = alumnusRepository.getCachedData();
-        mAdapter = new ContactRecyclerAdapter(alumnusList, this);
+        mAdapter = new RecyclerAdapter(alumnusList, this);
         mRecyclerView.setAdapter(mAdapter);
 
     }

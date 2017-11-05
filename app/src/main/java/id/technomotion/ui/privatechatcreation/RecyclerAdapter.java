@@ -1,4 +1,4 @@
-package id.technomotion.ui.contact;
+package id.technomotion.ui.privatechatcreation;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,23 +10,23 @@ import java.util.ArrayList;
 import id.technomotion.R;
 import id.technomotion.model.Person;
 
-public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactHolder> {
+public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final ArrayList<Person> persons;
-    private final ContactHolder.OnContactClickedListener listener;
+    private final ViewHolder.OnContactClickedListener listener;
 
-    public ContactRecyclerAdapter(ArrayList<Person> persons, ContactHolder.OnContactClickedListener listener) {
+    public RecyclerAdapter(ArrayList<Person> persons, ViewHolder.OnContactClickedListener listener) {
         this.persons = persons;
         this.listener = listener;
     }
 
     @Override
-    public ContactHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View inflatedView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_alumni, parent, false);
-        return new ContactHolder(inflatedView, listener);
+        return new ViewHolder(inflatedView, listener);
     }
 
     @Override
-    public void onBindViewHolder(ContactHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         Person person = persons.get(position);
         holder.bindAlumni(person);
     }

@@ -1,4 +1,4 @@
-package id.technomotion.ui.contact;
+package id.technomotion.ui.privatechatcreation;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -18,8 +18,8 @@ import id.technomotion.model.Person;
  * Created by omayib on 18/09/17.
  */
 
-public class ContactHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    private static final String TAG = "ContactHolder";
+public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private static final String TAG = "ViewHolder";
     private TextView itemName;
     private TextView itemJob;
     private ImageView picture;
@@ -27,7 +27,7 @@ public class ContactHolder extends RecyclerView.ViewHolder implements View.OnCli
     private CheckBox checkBox;
     private final OnContactClickedListener listener;
 
-    public ContactHolder(View itemView, OnContactClickedListener listener) {
+    public ViewHolder(View itemView, OnContactClickedListener listener) {
         super(itemView);
         checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);
         itemName = (TextView) itemView.findViewById(R.id.textViewName);

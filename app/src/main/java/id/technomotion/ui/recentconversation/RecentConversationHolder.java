@@ -25,7 +25,7 @@ import rx.schedulers.Schedulers;
  */
 
 public class RecentConversationHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    private static final String TAG = "ContactHolder";
+    private static final String TAG = "ViewHolder";
     private TextView itemName;
     private TextView itemJob;
     private ImageView picture;

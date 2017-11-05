@@ -16,7 +16,7 @@ import com.qiscus.sdk.data.remote.QiscusApi;
 import java.util.ArrayList;
 import java.util.List;
 
-import id.technomotion.ui.contact.ContactsActivity;
+import id.technomotion.ui.privatechatcreation.PrivateChatCreationActivity;
 import id.technomotion.R;
 import id.technomotion.model.Room;
 import rx.Observer;
@@ -47,7 +47,7 @@ public class RecentConversationsActivity extends AppCompatActivity {
         fabCreateNewConversation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(RecentConversationsActivity.this, ContactsActivity.class);
+                Intent intent = new Intent(RecentConversationsActivity.this, PrivateChatCreationActivity.class);
                 startActivity(intent);
             }
         });

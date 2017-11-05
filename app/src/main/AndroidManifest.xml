@@ -25,7 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.contact.ContactsActivity" />
+        <activity android:name=".ui.privatechatcreation.PrivateChatCreationActivity" />
         <activity android:name=".ui.recentconversation.RecentConversationsActivity"></activity>
     </application>
 
