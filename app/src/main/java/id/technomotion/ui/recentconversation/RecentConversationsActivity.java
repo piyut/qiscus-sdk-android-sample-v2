@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.qiscus.sdk.data.model.QiscusChatRoom;
@@ -37,6 +39,8 @@ public class RecentConversationsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recent_conversations);
 
+        getSupportActionBar().setTitle("Recent conversation");
+
         recyclerView = (RecyclerView) findViewById(R.id.recyclerRecentConversation);
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -63,6 +67,17 @@ public class RecentConversationsActivity extends AppCompatActivity {
         });
 
         reloadRecentConversation();
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_contact,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //gotoContact
+        return super.onOptionsItemSelected(item);
     }
 
     public void reloadRecentConversation(){
