@@ -2,6 +2,7 @@ package id.technomotion.ui.groupchatcreation;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -37,6 +38,7 @@ public class GroupChatCreationActivity extends Activity implements RepositoryTra
     private View viewGroupCreation;
     private ArrayList<String> contacts = new ArrayList<>();
     private FloatingActionButton nextFab;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,7 +57,8 @@ public class GroupChatCreationActivity extends Activity implements RepositoryTra
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         alumnusRepository = new AlumnusRepository();
         alumnusRepository.setListener(this);
-
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please wait...");
         alumnusList = alumnusRepository.getCachedData();
 
 
@@ -67,15 +70,18 @@ public class GroupChatCreationActivity extends Activity implements RepositoryTra
 
     @SuppressLint("LongLogTag")
     private void createGroupChat(String groupName) {
+        progressDialog.show();
         Qiscus.buildGroupChatRoom(groupName,contacts).build(new Qiscus.ChatBuilderListener() {
             @Override
             public void onSuccess(QiscusChatRoom qiscusChatRoom) {
+                progressDialog.dismiss();
                 startActivity(QiscusGroupChatActivity.generateIntent(GroupChatCreationActivity.this, qiscusChatRoom));
                 finish();
             }
 
             @Override
             public void onError(Throwable throwable) {
+                progressDialog.dismiss();
                 throwable.printStackTrace();
             }
         });

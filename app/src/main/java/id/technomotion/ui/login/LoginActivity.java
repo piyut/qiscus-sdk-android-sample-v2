@@ -108,9 +108,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-
-        mEmailView.setText("Haris@email.com");
-        mPasswordView.setText("user1234");
     }
 
     private void populateAutoComplete() {
@@ -213,6 +210,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             Log.d(TAG, "onSuccess: ");
                             showProgress(false);
                             startActivity(new Intent(LoginActivity.this, RecentConversationsActivity.class));
+                            finish();
                         }
 
                         @Override

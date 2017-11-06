@@ -68,6 +68,14 @@ public class RecentConversationsActivity extends AppCompatActivity {
 
         reloadRecentConversation();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+        reloadRecentConversation();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_contact,menu);
