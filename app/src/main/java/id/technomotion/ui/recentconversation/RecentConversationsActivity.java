@@ -41,39 +41,37 @@ public class RecentConversationsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         if (!Qiscus.hasSetupUser()) {
             startActivity(new Intent(RecentConversationsActivity.this, LoginActivity.class));
-        }
-        else
-            {
-        setContentView(R.layout.activity_recent_conversations);
+        } else {
+            setContentView(R.layout.activity_recent_conversations);
 
-        getSupportActionBar().setTitle("Recent conversation");
+            getSupportActionBar().setTitle("Recent conversation");
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerRecentConversation);
-        linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView = (RecyclerView) findViewById(R.id.recyclerRecentConversation);
+            linearLayoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(linearLayoutManager);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+            swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
 
-        fabCreateNewConversation = (FloatingActionButton) findViewById(R.id.buttonCreateNewConversation);
-        fabCreateNewConversation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(RecentConversationsActivity.this, PrivateChatCreationActivity.class);
-                startActivity(intent);
-            }
-        });
+            fabCreateNewConversation = (FloatingActionButton) findViewById(R.id.buttonCreateNewConversation);
+            fabCreateNewConversation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(RecentConversationsActivity.this, PrivateChatCreationActivity.class);
+                    startActivity(intent);
+                }
+            });
 
-        adapter = new RecentConversationRecyclerAdapter(rooms);
-        recyclerView.setAdapter(adapter);
+            adapter = new RecentConversationRecyclerAdapter(rooms);
+            recyclerView.setAdapter(adapter);
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                reloadRecentConversation();
-            }
-        });
+            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    reloadRecentConversation();
+                }
+            });
 
-        reloadRecentConversation();
+            reloadRecentConversation();
         }
     }
 
@@ -86,17 +84,28 @@ public class RecentConversationsActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_contact,menu);
+        getMenuInflater().inflate(R.menu.menu_contact, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //gotoContact
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.logout_menu:
+                logout();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
-    public void reloadRecentConversation(){
+    private void logout() {
+        Qiscus.clearUser();
+        startActivity(new Intent(RecentConversationsActivity.this, LoginActivity.class));
+    }
+
+    public void reloadRecentConversation() {
         swipeRefreshLayout.setRefreshing(true);
         QiscusApi.getInstance().getChatRooms(1, 20, true)
                 .subscribeOn(Schedulers.io())
@@ -117,11 +126,11 @@ public class RecentConversationsActivity extends AppCompatActivity {
 
                     @Override
                     public void onNext(List<QiscusChatRoom> qiscusChatRooms) {
-                        Log.d(TAG, "onNext: size" +qiscusChatRooms.size());
+                        Log.d(TAG, "onNext: size" + qiscusChatRooms.size());
                         for (int i = 0; i < qiscusChatRooms.size(); i++) {
-                            Room room = new Room(qiscusChatRooms.get(i).getId(),qiscusChatRooms.get(i).getName());
+                            Room room = new Room(qiscusChatRooms.get(i).getId(), qiscusChatRooms.get(i).getName());
                             room.setLatestConversation(qiscusChatRooms.get(i).getLastComment().getMessage());
-                            if (!rooms.contains(room)){
+                            if (!rooms.contains(room)) {
                                 rooms.add(room);
                             }
                         }
