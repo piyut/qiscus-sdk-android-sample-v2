@@ -12,12 +12,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.qiscus.sdk.Qiscus;
 import com.qiscus.sdk.data.model.QiscusChatRoom;
 import com.qiscus.sdk.data.remote.QiscusApi;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import id.technomotion.ui.login.LoginActivity;
 import id.technomotion.ui.privatechatcreation.PrivateChatCreationActivity;
 import id.technomotion.R;
 import id.technomotion.model.Room;
@@ -37,6 +39,11 @@ public class RecentConversationsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!Qiscus.hasSetupUser()) {
+            startActivity(new Intent(RecentConversationsActivity.this, LoginActivity.class));
+        }
+        else
+            {
         setContentView(R.layout.activity_recent_conversations);
 
         getSupportActionBar().setTitle("Recent conversation");
@@ -67,6 +74,7 @@ public class RecentConversationsActivity extends AppCompatActivity {
         });
 
         reloadRecentConversation();
+        }
     }
 
     @Override
