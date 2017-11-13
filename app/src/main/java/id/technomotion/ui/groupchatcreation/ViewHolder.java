@@ -1,8 +1,10 @@
 package id.technomotion.ui.groupchatcreation;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,7 +19,7 @@ import id.technomotion.model.SelectableContact;
  * Created by omayib on 05/11/17.
  */
 
-public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private static final String TAG = "ViewHolder";
     private TextView itemName;
     private TextView itemJob;
@@ -34,7 +36,7 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         picture = (ImageView) itemView.findViewById(R.id.imageViewProfile);
         this.listener = listener;
 
-        itemView.setOnClickListener(this);
+        itemView.setOnClickListener(this);checkBox.setOnCheckedChangeListener(this);
     }
 
     public void bindAlumni(SelectableContact person){
@@ -48,6 +50,18 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     @Override
     public void onClick(final View v) {
         this.checkBox.setChecked(!this.selectedContact.isSelected());
+        Log.d("CHECK",String.valueOf(this.checkBox.isChecked()));
+        this.selectedContact.setSelected(this.checkBox.isChecked());
+
+        if(this.checkBox.isChecked()){
+            this.listener.onContactSelected(this.selectedContact.getEmail());
+        }else{
+            this.listener.onContactUnselected(this.selectedContact.getEmail());
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         this.selectedContact.setSelected(this.checkBox.isChecked());
 
         if(this.checkBox.isChecked()){
