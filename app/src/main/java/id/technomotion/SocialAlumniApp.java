@@ -14,7 +14,7 @@ public class SocialAlumniApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Qiscus.init(this,"socialalu-djhi8lqbprs");
+        Qiscus.init(this,"sampleapp-65ghcsaysse");
         Realm.init(this);
     }
 }

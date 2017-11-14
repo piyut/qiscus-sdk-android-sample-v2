@@ -78,8 +78,12 @@ public class RecentConversationsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume: ");
-        reloadRecentConversation();
+        if (!Qiscus.hasSetupUser()) {
+            startActivity(new Intent(RecentConversationsActivity.this, LoginActivity.class));
+        } else {
+            Log.d(TAG, "onResume: ");
+            reloadRecentConversation();
+        }
     }
 
     @Override
@@ -106,7 +110,9 @@ public class RecentConversationsActivity extends AppCompatActivity {
     }
 
     public void reloadRecentConversation() {
-        swipeRefreshLayout.setRefreshing(true);
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(true);
+        }
         QiscusApi.getInstance().getChatRooms(1, 20, true)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

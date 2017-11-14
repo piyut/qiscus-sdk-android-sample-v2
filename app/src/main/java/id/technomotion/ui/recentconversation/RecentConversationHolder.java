@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.qiscus.sdk.data.model.QiscusChatRoom;
 import com.qiscus.sdk.data.remote.QiscusApi;
@@ -43,7 +44,9 @@ public class RecentConversationHolder extends RecyclerView.ViewHolder implements
         this.selectedRoom = room;
         this.itemName.setText(room.getName());
         this.itemJob.setText(room.getLatestConversation());
-        Picasso.with(this.picture.getContext()).load("http://lorempixel.com/200/200/people/"+ UUID.randomUUID().toString()).into(picture);
+        if (picture == null) {
+            Picasso.with(this.picture.getContext()).load("http://lorempixel.com/200/200/people/" + UUID.randomUUID().toString()).into(picture);
+        }
     }
 
     @Override

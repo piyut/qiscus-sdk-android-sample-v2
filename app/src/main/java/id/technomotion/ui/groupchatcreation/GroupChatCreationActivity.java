@@ -35,7 +35,7 @@ public class GroupChatCreationActivity extends Activity implements RepositoryTra
     private RecyclerAdapter mAdapter;
     private ArrayList<Person> alumnusList;
     private AlumnusRepository alumnusRepository;
-    private View viewGroupCreation;
+    private View viewGroupCreation,viewChatWithStranger;
     private ArrayList<String> contacts = new ArrayList<>();
     private FloatingActionButton nextFab;
     private ProgressDialog progressDialog;
@@ -52,6 +52,7 @@ public class GroupChatCreationActivity extends Activity implements RepositoryTra
 
         nextFab = (FloatingActionButton) findViewById(R.id.nextFloatingButton);
         viewGroupCreation = findViewById(R.id.newGroupLayout);
+        viewChatWithStranger = findViewById(R.id.chatWithStrangerLayout);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewAlumni);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -61,7 +62,7 @@ public class GroupChatCreationActivity extends Activity implements RepositoryTra
         progressDialog.setMessage("Please wait...");
         alumnusList = alumnusRepository.getCachedData();
 
-
+        viewChatWithStranger.setVisibility(View.GONE);
         viewGroupCreation.setVisibility(View.GONE);
         nextFab.setVisibility(View.VISIBLE);
         nextFab.setOnClickListener(this);
@@ -121,12 +122,12 @@ public class GroupChatCreationActivity extends Activity implements RepositoryTra
             GroupNameDialogFragment dialogFragment = new GroupNameDialogFragment(this);
             dialogFragment.show(getFragmentManager(),"show_group_name");
         }else{
-            Toast.makeText(this, "select more than one", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "select at least one", Toast.LENGTH_SHORT).show();
         }
     }
 
     private boolean selectedContactIsMoreThanOne(){
-        return this.contacts.size() > 1;
+        return this.contacts.size() > 0;
     }
 
     @Override
