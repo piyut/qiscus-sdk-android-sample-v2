@@ -44,9 +44,7 @@ public class RecentConversationHolder extends RecyclerView.ViewHolder implements
         this.selectedRoom = room;
         this.itemName.setText(room.getName());
         this.itemJob.setText(room.getLatestConversation());
-        if (picture == null) {
-            Picasso.with(this.picture.getContext()).load("http://lorempixel.com/200/200/people/" + UUID.randomUUID().toString()).into(picture);
-        }
+        Picasso.with(this.picture.getContext()).load("http://lorempixel.com/200/200/people/" + room.getName()).into(picture);
     }
 
     @Override

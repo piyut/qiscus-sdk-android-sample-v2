@@ -43,7 +43,7 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         this.selectedContact = person;
         this.itemName.setText(person.getName());
         this.itemJob.setText(person.getJob());
-        Picasso.with(this.picture.getContext()).load("http://lorempixel.com/200/200/people/"+ UUID.randomUUID().toString()).into(picture);
+        Picasso.with(this.picture.getContext()).load("http://lorempixel.com/200/200/people/"+ person.getName()).into(picture);
     }
 
     @Override
