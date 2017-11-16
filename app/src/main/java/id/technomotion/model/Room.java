@@ -8,6 +8,7 @@ public class Room {
     private final int id;
     private final String name;
     private String latestConversation="";
+    private String onlineImage="";
 
     public Room(int id, String name) {
         this.id = id;
@@ -22,6 +23,12 @@ public class Room {
         this.latestConversation = latestConversation;
     }
 
+
+    public void setOnlineImage(String image) {
+        this.onlineImage = image;
+    }
+
+    public String getOnlineImage() {return onlineImage;}
     public int getId() {
         return id;
     }

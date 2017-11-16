@@ -136,6 +136,7 @@ public class RecentConversationsActivity extends AppCompatActivity {
                         for (int i = 0; i < qiscusChatRooms.size(); i++) {
                             Room room = new Room(qiscusChatRooms.get(i).getId(), qiscusChatRooms.get(i).getName());
                             room.setLatestConversation(qiscusChatRooms.get(i).getLastComment().getMessage());
+                            room.setOnlineImage(qiscusChatRooms.get(i).getAvatarUrl());
                             if (!rooms.contains(room)) {
                                 rooms.add(room);
                             }
