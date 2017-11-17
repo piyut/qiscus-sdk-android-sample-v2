@@ -9,6 +9,12 @@ public class Room {
     private final String name;
     private String latestConversation="";
     private String onlineImage="";
+    private int unreadCounter=0;
+    private String lastMessageTime="";
+
+
+
+
 
     public Room(int id, String name) {
         this.id = id;
@@ -37,6 +43,13 @@ public class Room {
         return name;
     }
 
+    public int getUnreadCounter() { return unreadCounter; }
+
+    public void setUnreadCounter(int unreadCounter) { this.unreadCounter = unreadCounter;}
+
+    public String getLastMessageTime() { return lastMessageTime;}
+
+    public void setLastMessageTime(String lastMessageTime) { this.lastMessageTime = lastMessageTime;  }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

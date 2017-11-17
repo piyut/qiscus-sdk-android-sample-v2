@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import id.technomotion.R;
+import id.technomotion.ui.homepagetab.HomePageTabActivity;
 import id.technomotion.ui.recentconversation.RecentConversationsActivity;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -204,7 +205,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         public void onSuccess(QiscusAccount qiscusAccount) {
                             Log.d(TAG, "onSuccess: ");
                             showProgress(false);
-                            startActivity(new Intent(LoginActivity.this, RecentConversationsActivity.class));
+                            startActivity(new Intent(LoginActivity.this, HomePageTabActivity.class));
                             finish();
                         }
 

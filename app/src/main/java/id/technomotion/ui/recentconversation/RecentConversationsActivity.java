@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,9 +17,12 @@ import com.qiscus.sdk.Qiscus;
 import com.qiscus.sdk.data.model.QiscusChatRoom;
 import com.qiscus.sdk.data.remote.QiscusApi;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import id.technomotion.ui.homepagetab.RecentConversationFragmentRecyclerAdapter;
 import id.technomotion.ui.login.LoginActivity;
 import id.technomotion.ui.privatechatcreation.PrivateChatCreationActivity;
 import id.technomotion.R;
@@ -33,7 +37,7 @@ public class RecentConversationsActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
     private ArrayList<Room> rooms = new ArrayList<>();
-    private RecentConversationRecyclerAdapter adapter;
+    private RecentConversationFragmentRecyclerAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -61,7 +65,7 @@ public class RecentConversationsActivity extends AppCompatActivity {
                 }
             });
 
-            adapter = new RecentConversationRecyclerAdapter(rooms);
+            adapter = new RecentConversationFragmentRecyclerAdapter(rooms);
             recyclerView.setAdapter(adapter);
 
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -110,6 +114,7 @@ public class RecentConversationsActivity extends AppCompatActivity {
     }
 
     public void reloadRecentConversation() {
+
         if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setRefreshing(true);
         }
@@ -133,13 +138,31 @@ public class RecentConversationsActivity extends AppCompatActivity {
                     @Override
                     public void onNext(List<QiscusChatRoom> qiscusChatRooms) {
                         Log.d(TAG, "onNext: size" + qiscusChatRooms.size());
+                        rooms.clear();
                         for (int i = 0; i < qiscusChatRooms.size(); i++) {
-                            Room room = new Room(qiscusChatRooms.get(i).getId(), qiscusChatRooms.get(i).getName());
-                            room.setLatestConversation(qiscusChatRooms.get(i).getLastComment().getMessage());
-                            room.setOnlineImage(qiscusChatRooms.get(i).getAvatarUrl());
-                            if (!rooms.contains(room)) {
+                            QiscusChatRoom currentChatRoom = qiscusChatRooms.get(i);
+                            Room room = new Room(currentChatRoom.getId(), qiscusChatRooms.get(i).getName());
+                            room.setLatestConversation(currentChatRoom.getLastComment().getMessage());
+                            room.setOnlineImage(currentChatRoom.getAvatarUrl());
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                            SimpleDateFormat dateFormatToday = new SimpleDateFormat("hh:mm a");
+                            Date messageDate = currentChatRoom.getLastComment().getTime();
+                            String finalDateFormat = "";
+                            if (DateUtils.isToday(messageDate.getTime())) {
+                                finalDateFormat = dateFormatToday.format(currentChatRoom.getLastComment().getTime());
+                            }
+                            else {
+                                finalDateFormat = dateFormat.format(currentChatRoom.getLastComment().getTime());
+                            }
+                            room.setLastMessageTime(finalDateFormat);
+                            room.setUnreadCounter(currentChatRoom.getUnreadCount());
+                            rooms.add(room);
+                            /*if (!rooms.contains(room)) {
                                 rooms.add(room);
                             }
+                            else {
+                                rooms.set(rooms.indexOf(room),room);
+                            }*/
                         }
                     }
                 });

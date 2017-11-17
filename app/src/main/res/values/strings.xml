@@ -14,4 +14,6 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="create_group_chat">Create Group Chat</string>
+    <string name="chat_with_stranger">Chat With Stranger</string>
 </resources>

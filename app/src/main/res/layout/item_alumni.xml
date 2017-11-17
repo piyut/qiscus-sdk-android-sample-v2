@@ -9,7 +9,7 @@
         android:id="@+id/imageViewProfile"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        app:srcCompat="@drawable/emoji_one_1f1e6_1f1f1" />
+        app:srcCompat="@drawable/ic_default_avatar" />
 
     <LinearLayout
         android:layout_toRightOf="@+id/imageViewProfile"

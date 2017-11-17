@@ -24,13 +24,16 @@
         <ImageView
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:src="@mipmap/ic_launcher_round"/>
+            android:src="@drawable/ic_create_group"
+            android:tint="@color/colorAccent"
+            android:tintMode="src_atop"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
+            android:layout_marginLeft="2dp"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            android:text="NEW GROUP"/>
+            android:text="@string/create_group_chat"/>
     </LinearLayout>
 
     <LinearLayout
@@ -44,13 +47,15 @@
         <ImageView
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:src="@mipmap/ic_launcher_round"/>
+            android:src="@drawable/ic_stranger"
+            android:tint="@color/colorAccent"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            android:text="Chat With Stranger"/>
+            android:layout_marginLeft="2dp"
+            android:text="@string/chat_with_stranger"/>
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

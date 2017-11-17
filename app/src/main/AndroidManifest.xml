@@ -18,7 +18,6 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.splash.SplashScreen"
-
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +28,9 @@
         <activity android:name=".ui.privatechatcreation.PrivateChatCreationActivity" />
         <activity android:name=".ui.login.LoginActivity" />
         <activity android:name=".ui.groupchatcreation.GroupChatCreationActivity" />
-        <activity android:name=".ui.recentconversation.RecentConversationsActivity"></activity>
+        <activity android:name=".ui.recentconversation.RecentConversationsActivity" />
+        <activity android:name=".ui.homepagetab.HomePageTabActivity"
+            android:theme="@style/TabTheme"></activity>
     </application>
 
 </manifest>

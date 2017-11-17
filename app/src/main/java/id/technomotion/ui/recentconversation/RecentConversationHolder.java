@@ -31,12 +31,16 @@ public class RecentConversationHolder extends RecyclerView.ViewHolder implements
     private TextView itemJob;
     private ImageView picture;
     private Room selectedRoom;
+    private TextView lastMessageTime;
+    private TextView unreadCounter;
 
     public RecentConversationHolder(View itemView) {
         super(itemView);
         itemName = (TextView) itemView.findViewById(R.id.textViewRoomName);
         itemJob = (TextView) itemView.findViewById(R.id.textViewJob);
         picture = (ImageView) itemView.findViewById(R.id.imageViewRoomAvatar);
+        lastMessageTime = (TextView) itemView.findViewById(R.id.textViewRoomTime);
+        unreadCounter = (TextView) itemView.findViewById(R.id.unreadCounterView);
         itemView.setOnClickListener(this);
     }
 
@@ -44,6 +48,8 @@ public class RecentConversationHolder extends RecyclerView.ViewHolder implements
         this.selectedRoom = room;
         this.itemName.setText(room.getName());
         this.itemJob.setText(room.getLatestConversation());
+        this.lastMessageTime.setText(room.getLastMessageTime());
+        this.unreadCounter.setText(String.valueOf(room.getUnreadCounter()));
         String imagePath = "http://lorempixel.com/200/200/people/" + room.getName();
         imagePath = room.getOnlineImage();
         Picasso.with(this.picture.getContext()).load(imagePath).into(picture);

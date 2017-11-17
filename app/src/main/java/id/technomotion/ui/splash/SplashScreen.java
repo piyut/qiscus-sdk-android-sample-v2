@@ -9,6 +9,7 @@ import com.qiscus.sdk.Qiscus;
 import android.os.Handler;
 
 import id.technomotion.R;
+import id.technomotion.ui.homepagetab.HomePageTabActivity;
 import id.technomotion.ui.login.LoginActivity;
 import id.technomotion.ui.recentconversation.RecentConversationsActivity;
 
@@ -30,7 +31,8 @@ public class SplashScreen extends AppCompatActivity {
                     startActivity(new Intent(SplashScreen.this, LoginActivity.class));
                 }
                 else {
-                    startActivity(new Intent(SplashScreen.this, RecentConversationsActivity.class));
+                    //startActivity(new Intent(SplashScreen.this, RecentConversationsActivity.class));
+                    startActivity(new Intent(SplashScreen.this, HomePageTabActivity.class));
                 }
                 this.finish();
             }
