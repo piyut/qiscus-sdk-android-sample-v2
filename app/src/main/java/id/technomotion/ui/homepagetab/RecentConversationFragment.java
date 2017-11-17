@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.qiscus.sdk.Qiscus;
 import com.qiscus.sdk.data.model.QiscusChatRoom;
 import com.qiscus.sdk.data.remote.QiscusApi;
 
@@ -27,7 +28,9 @@ import java.util.List;
 
 import id.technomotion.R;
 import id.technomotion.model.Room;
+import id.technomotion.ui.login.LoginActivity;
 import id.technomotion.ui.privatechatcreation.PrivateChatCreationActivity;
+import id.technomotion.ui.recentconversation.RecentConversationsActivity;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -77,6 +80,17 @@ public class RecentConversationFragment extends Fragment {
         });
 
         reloadRecentConversation();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!Qiscus.hasSetupUser()) {
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+        } else {
+            Log.d(TAG, "onResume: ");
+            reloadRecentConversation();
+        }
     }
 
     public void reloadRecentConversation() {
