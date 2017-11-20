@@ -26,4 +26,3 @@ After cloning this repo, you can open and build the sample project from Android 
   - [x] Chat with Stranger
   - [x] Create Group
     - [x] Select Participant
-    - [] Add Group Info (Under Construction)
