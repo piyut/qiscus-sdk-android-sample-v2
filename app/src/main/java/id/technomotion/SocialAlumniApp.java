@@ -18,7 +18,7 @@ public class SocialAlumniApp extends Application {
         Qiscus.getChatConfig()
                 .setStatusBarColor(R.color.colorPrimaryDark)
                 .setAppBarColor(R.color.colorPrimary)
-                .setLeftBubbleColor(R.color.colorAccent)
+                .setLeftBubbleColor(R.color.emojiSafeYellow)
                 .setRightBubbleColor(R.color.colorPrimary)
                 .setRightBubbleTextColor(R.color.qiscus_white)
                 .setRightBubbleTimeColor(R.color.qiscus_white)
