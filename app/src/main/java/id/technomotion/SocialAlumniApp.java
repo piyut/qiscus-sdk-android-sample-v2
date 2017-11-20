@@ -21,6 +21,8 @@ public class SocialAlumniApp extends Application {
                 .setLeftBubbleColor(R.color.colorAccent)
                 .setRightBubbleColor(R.color.colorPrimary)
                 .setRightBubbleTextColor(R.color.qiscus_white)
+                .setRightBubbleTimeColor(R.color.qiscus_white)
+                .setReadIconColor(R.color.colorAccent)
                 .setAccentColor(R.color.colorAccent);
         Realm.init(this);
     }

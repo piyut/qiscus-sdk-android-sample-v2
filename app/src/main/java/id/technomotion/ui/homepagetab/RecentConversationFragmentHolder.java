@@ -54,7 +54,15 @@ public class RecentConversationFragmentHolder extends RecyclerView.ViewHolder im
         this.itemName.setText(room.getName());
         this.itemJob.setText(room.getLatestConversation());
         this.lastMessageTime.setText(room.getLastMessageTime());
-        this.unreadCounter.setText(String.valueOf(room.getUnreadCounter()));
+        int unread = room.getUnreadCounter();
+        if ( unread > 0) {
+            this.unreadCounter.setVisibility(View.VISIBLE);
+            this.unreadCounter.setText(String.valueOf(unread));
+        }
+        else
+        {
+            this.unreadCounter.setVisibility(View.GONE);
+        }
         String imagePath = "http://lorempixel.com/200/200/people/" + room.getName();
         imagePath = room.getOnlineImage();
         Picasso.with(this.picture.getContext()).load(imagePath).into(picture);

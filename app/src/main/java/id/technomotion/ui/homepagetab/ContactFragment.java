@@ -51,7 +51,7 @@ public class ContactFragment extends Fragment implements RepositoryTransactionLi
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View v = getView();
-        
+
         mRecyclerView = (RecyclerView) v.findViewById(R.id.recyclerViewAlumni);
         mLinearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);

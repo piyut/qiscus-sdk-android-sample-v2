@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.qiscus.sdk.Qiscus;
 import com.qiscus.sdk.data.model.QiscusChatRoom;
@@ -43,6 +44,7 @@ public class RecentConversationFragment extends Fragment {
     private ArrayList<Room> rooms = new ArrayList<>();
     private RecentConversationFragmentRecyclerAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private LinearLayout emptyRoomView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -94,7 +96,8 @@ public class RecentConversationFragment extends Fragment {
     }
 
     public void reloadRecentConversation() {
-
+        View v = getView();
+        emptyRoomView = (LinearLayout) v.findViewById(R.id.empty_room_view);
         if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setRefreshing(true);
         }
@@ -119,6 +122,10 @@ public class RecentConversationFragment extends Fragment {
                     public void onNext(List<QiscusChatRoom> qiscusChatRooms) {
                         Log.d(TAG, "onNext: size" + qiscusChatRooms.size());
                         rooms.clear();
+                        int roomCount = qiscusChatRooms.size();
+                        if (roomCount > 0) {
+                            emptyRoomView.setVisibility(View.GONE);
+                        }
                         for (int i = 0; i < qiscusChatRooms.size(); i++) {
                             QiscusChatRoom currentChatRoom = qiscusChatRooms.get(i);
                             Room room = new Room(currentChatRoom.getId(), qiscusChatRooms.get(i).getName());
