@@ -6,7 +6,7 @@ Qiscus SDK Android Sample v2 is a messaging app using [Qiscus SDK Android](https
 
 After cloning this repo, you can open and build the sample project from Android Studio.
 
-```
+
 
 
 ## Screen Shots
