@@ -11,10 +11,10 @@ After cloning this repo, you can open and build the sample project from Android 
 
 ## Screen Shots
 
-![login](https://i.imgur.com/wWZ75U1.png)
-![list room](https://i.imgur.com/KB0kzRz.png)
-![new chat](https://i.imgur.com/BXcL5i8.png)
-![room chat](https://i.imgur.com/uMa7016.png)
+![login](https://i.imgur.com/wWZ75U1.png?1)
+![list room](https://i.imgur.com/KB0kzRz.png?1)
+![new chat](https://i.imgur.com/BXcL5i8.png?1)
+![room chat](https://i.imgur.com/uMa7016.png?1)
 
 ## Features
 - [x] Splash/Launch Screen
