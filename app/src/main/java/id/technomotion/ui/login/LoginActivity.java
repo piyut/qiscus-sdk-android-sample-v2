@@ -28,16 +28,19 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.qiscus.sdk.Qiscus;
 import com.qiscus.sdk.data.model.QiscusAccount;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import id.technomotion.R;
 import id.technomotion.ui.homepagetab.HomePageTabActivity;
 import id.technomotion.ui.recentconversation.RecentConversationsActivity;
+import retrofit2.HttpException;
 
 import static android.Manifest.permission.READ_CONTACTS;
 /*
@@ -78,6 +81,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private Button mEmailSignInButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +102,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -209,14 +213,37 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             finish();
                         }
 
+                       // @Override
+                       // public void onError(Throwable throwable) {
+                       //     showProgress(false);
+                       //     Log.e(TAG, "onError: ",throwable );
+                       // }
+
                         @Override
                         public void onError(Throwable throwable) {
                             showProgress(false);
-                            Log.e(TAG, "onError: ",throwable );
+                            if (throwable instanceof HttpException) { //Error response from server
+                                HttpException e = (HttpException) throwable;
+                                try {
+                                    String errorMessage = e.response().errorBody().string();
+                                    Log.e(TAG, errorMessage);
+                                    showError(errorMessage);
+                                } catch (IOException e1) {
+                                    e1.printStackTrace();
+                                }
+                            } else if (throwable instanceof IOException) { //Error from network
+                                showError("Can not connect to qiscus server!");
+                            } else { //Unknown error
+                                showError("Unexpected error!");
+                            }
                         }
                     });
 
         }
+    }
+
+    private void showError(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -237,11 +264,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mEmailSignInButton.setVisibility(show ? View.GONE : View.VISIBLE);
             mLoginFormView.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                    mEmailSignInButton.setVisibility(show ? View.GONE : View.VISIBLE);
                 }
             });
 
@@ -257,6 +286,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mEmailSignInButton.setVisibility(show ? View.GONE : View.VISIBLE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
@@ -359,7 +389,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 finish();
+                Toast.makeText(LoginActivity.this, "sukses", Toast.LENGTH_SHORT).show();
             } else {
+                Toast.makeText(LoginActivity.this, "tidak sukses", Toast.LENGTH_SHORT).show();
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
