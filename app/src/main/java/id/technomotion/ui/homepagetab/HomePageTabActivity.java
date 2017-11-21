@@ -17,7 +17,7 @@ import id.technomotion.ui.recentconversation.RecentConversationsActivity;
 
 
 public class HomePageTabActivity extends AppCompatActivity {
-
+    ViewPager viewPager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +30,7 @@ public class HomePageTabActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("Contacts"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new PagerAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
@@ -74,5 +74,17 @@ public class HomePageTabActivity extends AppCompatActivity {
     private void logout() {
         Qiscus.clearUser();
         startActivity(new Intent(HomePageTabActivity.this, LoginActivity.class));
+    }
+
+
+    @Override
+    public void onBackPressed() {
+
+        if (viewPager.getCurrentItem() != 0) {
+            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1,false);
+        }else{
+            finish();
+        }
+
     }
 }
