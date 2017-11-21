@@ -65,6 +65,7 @@ public class RecentConversationHolder extends RecyclerView.ViewHolder implements
                     new QiscusRxExecutor.Listener<QiscusChatRoom>() {
                 @Override
                 public void onSuccess(QiscusChatRoom qiscusChatRoom) {
+                    Qiscus.getDataStore().addOrUpdate(qiscusChatRoom);
                     currentActivity.startActivity(QiscusGroupChatActivity.
                             generateIntent(currentActivity, qiscusChatRoom));
                 }
