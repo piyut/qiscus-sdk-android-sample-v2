@@ -204,6 +204,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //            mAuthTask = new UserLoginTask(email, password);
 //            mAuthTask.execute((Void) null);
             Qiscus.setUser(email,password)
+                    .withAvatarUrl("http://lorempixel.com/200/200/people/"+ email)
                     .save(new Qiscus.SetUserListener() {
                         @Override
                         public void onSuccess(QiscusAccount qiscusAccount) {

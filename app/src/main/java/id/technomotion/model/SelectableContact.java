@@ -9,6 +9,7 @@ public class SelectableContact extends Person {
 
     public SelectableContact(Person person, boolean isSelected){
         super(person.getId(), person.getName(), person.getEmail(),person.getJob());
+        this.setAvatarUrl(person.getAvatarUrl());
         this.isSelected = isSelected;
     }
 

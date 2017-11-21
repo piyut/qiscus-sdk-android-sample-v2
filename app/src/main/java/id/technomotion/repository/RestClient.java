@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class RestClient {
-    private String url="http://dashboard-sample.herokuapp.com/rest/";
+    private String url="http://dashboard-sample.herokuapp.com/api/";
     private static RestClient ourInstance;
 
     private RestClient() {
