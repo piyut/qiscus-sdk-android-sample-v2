@@ -53,7 +53,7 @@ public class RecentConversationFragment extends Fragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onActivityCreated(savedInstanceState);
 
         View v = getView();
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerRecentConversation);
