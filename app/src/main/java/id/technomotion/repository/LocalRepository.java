@@ -37,7 +37,12 @@ public class LocalRepository implements Repository {
         realm.beginTransaction();
         for (Person p :
                 persons) {
-            PersonPersistance personPersistance = realm.createObject(PersonPersistance.class);
+            PersonPersistance personPersistance;
+            personPersistance = realm.where(PersonPersistance.class).equalTo("id", p.getId()).findFirst();
+            if (personPersistance == null) {
+                personPersistance = realm.createObject(PersonPersistance.class);
+            }
+
             personPersistance.setEmail(p.getEmail());
             personPersistance.setId(p.getId());
             personPersistance.setJob(p.getJob());
