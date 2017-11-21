@@ -33,6 +33,7 @@ public class SplashScreen extends AppCompatActivity {
                 else {
                     //startActivity(new Intent(SplashScreen.this, RecentConversationsActivity.class));
                     startActivity(new Intent(SplashScreen.this, HomePageTabActivity.class));
+                    this.finish();
                 }
                 this.finish();
             }
@@ -44,4 +45,5 @@ public class SplashScreen extends AppCompatActivity {
         }, splashInterval);
 
     };
+
 }

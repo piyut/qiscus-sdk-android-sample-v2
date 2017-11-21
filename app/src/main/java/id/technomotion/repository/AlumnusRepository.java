@@ -38,22 +38,23 @@ public class AlumnusRepository {
     public void loadAll(){
         Log.d(TAG, "loadAll: ");
         CachedData cachedData = (CachedData) cacheRepo;
-        if (!cachedData.alumnus.isEmpty()){
+        /*if (!cachedData.alumnus.isEmpty()){
             Log.d(TAG, "loadAll: load cache");
             this.listener.onLoadAlumnusSucceeded(cachedData.alumnus);
             return;
-        }
+        }*/
         Log.d(TAG, "loadAll: localrepo");
         localRepo.loadAll(new RepositoryCallback<List<Person>>() {
             @Override
             public void onSucceed(List<Person> value) {
-                if(!value.isEmpty()){
+                reloadAll();
+                /*if(!value.isEmpty()){
                     cacheRepo.save(value);
                     Log.d(TAG, "loadAll: load local");
                     listener.onLoadAlumnusSucceeded(value);
                 }else{
                     reloadAll();
-                }
+                }*/
             }
 
             @Override
@@ -67,12 +68,14 @@ public class AlumnusRepository {
         remoteRepo.loadAll(new RepositoryCallback<List<Person>>() {
             @Override
             public void onSucceed(final List<Person> value) {
+                CachedData cachedData = (CachedData) cacheRepo;
+                cachedData.alumnus.clear();
                 cacheRepo.save(value);
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        localRepo.save(value);
+                        //localRepo.save(value);
                     }
                 });
 
