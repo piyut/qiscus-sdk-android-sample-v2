@@ -15,6 +15,8 @@
         completions."
     </string>
     <string name="create_group_chat">Create Group Chat</string>
+    <string name="group_name_hint">Type group name here</string>
+    <string name="group_upload_text">Give your group a name and add optional photo</string>
     <string name="chat_with_stranger">Chat With Stranger</string>
     <string name="stranger_chat_guidance">"Enter the username of your chat target\nex:&quot;demo@qiscus.com&quot; "</string>
     <string name="empty_room_guidance">Start 1 on 1 chat with stranger or group chat with your friend. </string>

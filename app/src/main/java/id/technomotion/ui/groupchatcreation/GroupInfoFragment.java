@@ -1,17 +1,30 @@
 package id.technomotion.ui.groupchatcreation;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.qiscus.sdk.Qiscus;
+import com.qiscus.sdk.data.model.QiscusChatRoom;
+import com.qiscus.sdk.ui.QiscusGroupChatActivity;
+
+import java.util.ArrayList;
 
 import id.technomotion.R;
+import id.technomotion.ui.privatechatcreation.PrivateChatCreationActivity;
+import android.view.View.OnClickListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,15 +34,20 @@ import id.technomotion.R;
  * Use the {@link GroupInfoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GroupInfoFragment extends Fragment {
+public class GroupInfoFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    private ProgressDialog progressDialog;
+    private ArrayList<String> contacts = new ArrayList<>();
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private static String CONTACT_KEY= "CONTACT_KEY";
+    private static String selectMore = "select at least one";
+    private static String groupNameFormat = "Please input group name";
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -41,17 +59,20 @@ public class GroupInfoFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
+     * @param contacts List of contact.
      * @param param2 Parameter 2.
      * @return A new instance of fragment GroupInfoFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static GroupInfoFragment newInstance(String param1, String param2) {
+    public static GroupInfoFragment newInstance(ArrayList<String> contactsList, String param2) {
         GroupInfoFragment fragment = new GroupInfoFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(CONTACT_KEY, contactsList);
+        fragment.setArguments(bundle);
+
+        bundle.putString(ARG_PARAM2, param2);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -69,9 +90,15 @@ public class GroupInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        contacts = (ArrayList<String>) getArguments().getSerializable(
+                CONTACT_KEY);
         android.support.v7.app.ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Add Group Info");
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Please wait...");
+        FloatingActionButton nextFab = (FloatingActionButton) getActivity().findViewById(R.id.nextFloatingButton);
+        nextFab.setOnClickListener(this);
         return inflater.inflate(R.layout.fragment_group_info, container, false);
     }
 
@@ -114,4 +141,44 @@ public class GroupInfoFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    @Override
+    public void onClick(View view) {
+        EditText groupNameView = (EditText) getView().findViewById(R.id.group_name_input);
+        String groupName = groupNameView.getText().toString();
+        boolean groupNameInputted =  groupName.trim().length() > 0;
+        if (groupNameInputted &&  selectedContactIsMoreThanOne()){
+            createGroupChat(groupName);
+
+
+            //GroupNameDialogFragment dialogFragment = new GroupNameDialogFragment(this);
+            //dialogFragment.show(getFragmentManager(),"show_group_name");
+        }else{
+            String warningText = (groupNameInputted) ? selectMore : groupNameFormat;
+            Toast.makeText(getActivity(), warningText, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    private boolean selectedContactIsMoreThanOne(){
+        return this.contacts.size() > 0;
+    }
+
+    @SuppressLint("LongLogTag")
+    private void createGroupChat(String groupName) {
+        progressDialog.show();
+        Qiscus.buildGroupChatRoom(groupName,contacts).build(new Qiscus.ChatBuilderListener() {
+            @Override
+            public void onSuccess(QiscusChatRoom qiscusChatRoom) {
+                progressDialog.dismiss();
+                startActivity(QiscusGroupChatActivity.generateIntent(getActivity(), qiscusChatRoom));
+                getActivity().finish();
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                progressDialog.dismiss();
+                throwable.printStackTrace();
+            }
+        });
+    }
 }

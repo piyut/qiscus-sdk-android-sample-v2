@@ -133,7 +133,7 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
     public void onClick(View view) {
         if (selectedContactIsMoreThanOne()){
 
-            Fragment fr =  GroupInfoFragment.newInstance("12","23");
+            Fragment fr =  GroupInfoFragment.newInstance(contacts,"23");
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.frameLayout, fr)
                     .addToBackStack( "tag" )
@@ -161,7 +161,7 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
     }
     public boolean onOptionsItemSelected(MenuItem item){
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frameLayout);
-        if (!currentFragment.isVisible()) {
+        if (currentFragment == null || !currentFragment.isVisible() ) {
             finish();
         }
         else {
