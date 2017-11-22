@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.qiscus.sdk.Qiscus;
@@ -41,6 +42,7 @@ public class ContactFragment extends Fragment implements RepositoryTransactionLi
     private RecyclerAdapter mAdapter;
     private ArrayList<Person> alumnusList;
     private AlumnusRepository alumnusRepository;
+    private LinearLayout mEmptyRoomVIew;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,10 +59,12 @@ public class ContactFragment extends Fragment implements RepositoryTransactionLi
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         alumnusRepository = new AlumnusRepository();
         alumnusRepository.setListener(this);
+        mEmptyRoomVIew = (LinearLayout) v.findViewById(R.id.empty_contact_view);
 
         alumnusList = alumnusRepository.getCachedData();
         mAdapter = new RecyclerAdapter(alumnusList, this);
         mRecyclerView.setAdapter(mAdapter);
+        Log.d("SIZE",String.valueOf(alumnusList.size()));
 
 
     }
@@ -69,10 +73,19 @@ public class ContactFragment extends Fragment implements RepositoryTransactionLi
     public void onResume() {
         super.onResume();
         alumnusRepository.loadAll();
+
     }
 
     @Override
     public void onLoadAlumnusSucceeded(List<Person> alumnus) {
+        if (alumnusList.isEmpty()) {
+            mEmptyRoomVIew.setVisibility(View.VISIBLE);
+        }
+        else {
+            mEmptyRoomVIew.setVisibility(View.INVISIBLE);
+        }
+        //Toast.makeText(this.getContext(), String.valueOf(alumnusList.size()), Toast.LENGTH_SHORT).show();
+
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -102,7 +115,20 @@ public class ContactFragment extends Fragment implements RepositoryTransactionLi
 
                                     @Override
                                     public void onError(Throwable throwable) {
-                                        throwable.printStackTrace();
+                                        if (throwable instanceof HttpException) { //Error response from server
+                                            HttpException e = (HttpException) throwable;
+                                            try {
+                                                String errorMessage = e.response().errorBody().string();
+                                                Log.e(TAG, errorMessage);
+                                                showError(errorMessage);
+                                            } catch (IOException e1) {
+                                                e1.printStackTrace();
+                                            }
+                                        } else if (throwable instanceof IOException) { //Error from network
+                                            showError("Can not connect to qiscus server!");
+                                        } else { //Unknown error
+                                            showError("Unexpected error!");
+                                        }
                                     }
                                 });
                     }
