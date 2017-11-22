@@ -1,6 +1,6 @@
 package id.technomotion.ui.privatechatcreation;
 
-        import android.annotation.SuppressLint;
+import android.annotation.SuppressLint;
         import android.app.DialogFragment;
         import android.os.Bundle;
         import android.support.annotation.Nullable;

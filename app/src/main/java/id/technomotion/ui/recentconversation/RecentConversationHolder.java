@@ -2,24 +2,19 @@ package id.technomotion.ui.recentconversation;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.qiscus.sdk.Qiscus;
 import com.qiscus.sdk.data.model.QiscusChatRoom;
 import com.qiscus.sdk.data.remote.QiscusApi;
 import com.qiscus.sdk.ui.QiscusGroupChatActivity;
+import com.qiscus.sdk.util.QiscusRxExecutor;
 import com.squareup.picasso.Picasso;
-
-import java.util.UUID;
 
 import id.technomotion.R;
 import id.technomotion.model.Room;
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by omayib on 30/10/17.
@@ -44,7 +39,7 @@ public class RecentConversationHolder extends RecyclerView.ViewHolder implements
         itemView.setOnClickListener(this);
     }
 
-    public void bindRecentConversation(Room room){
+    public void bindRecentConversation(Room room) {
         this.selectedRoom = room;
         this.itemName.setText(room.getName());
         this.itemJob.setText(room.getLatestConversation());
@@ -57,26 +52,30 @@ public class RecentConversationHolder extends RecyclerView.ViewHolder implements
 
     @Override
     public void onClick(final View v) {
-        final Activity currentActivity = (RecentConversationsActivity)v.getContext();
-        QiscusApi.getInstance()
-                .getChatRoom(this.selectedRoom.getId())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<QiscusChatRoom>() {
-                    @Override
-                    public void onCompleted() {
-                        Log.d(TAG, "onCompleted: ");
-                    }
+        final Activity currentActivity = (RecentConversationsActivity) v.getContext();
+        //fetch qiscuschatroom in qiscus database
+        QiscusChatRoom savedChatRoom = Qiscus.getDataStore().getChatRoom(selectedRoom.getId());
 
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
+        if (savedChatRoom != null) {
+            currentActivity.startActivity(QiscusGroupChatActivity.generateIntent(currentActivity, savedChatRoom));
+        } else {
+            //fetching API when we dont have any qiscus chat room in qiscus database
+            QiscusRxExecutor.execute(QiscusApi
+                    .getInstance().getChatRoom(selectedRoom.getId()),
+                    new QiscusRxExecutor.Listener<QiscusChatRoom>() {
+                @Override
+                public void onSuccess(QiscusChatRoom qiscusChatRoom) {
+                    Qiscus.getDataStore().addOrUpdate(qiscusChatRoom);
+                    currentActivity.startActivity(QiscusGroupChatActivity.
+                            generateIntent(currentActivity, qiscusChatRoom));
+                }
 
-                    @Override
-                    public void onNext(QiscusChatRoom qiscusChatRoom) {
-                        currentActivity.startActivity(QiscusGroupChatActivity.generateIntent(currentActivity, qiscusChatRoom));
-                    }
-                });
+                @Override
+                public void onError(Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            });
+        }
+
     }
 }
