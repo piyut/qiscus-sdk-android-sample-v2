@@ -28,7 +28,8 @@
         </activity>
         <activity android:name=".ui.privatechatcreation.PrivateChatCreationActivity" />
         <activity android:name=".ui.login.LoginActivity" />
-        <activity android:name=".ui.groupchatcreation.GroupChatCreationActivity" />
+        <activity android:name=".ui.groupchatcreation.GroupChatCreationActivity"
+            android:parentActivityName=".ui.privatechatcreation.PrivateChatCreationActivity"/>
         <activity android:name=".ui.recentconversation.RecentConversationsActivity" />
         <activity android:name=".ui.homepagetab.HomePageTabActivity"
             android:theme="@style/TabTheme"></activity>

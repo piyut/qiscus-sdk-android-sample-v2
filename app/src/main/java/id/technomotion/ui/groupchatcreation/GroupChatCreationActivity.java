@@ -1,7 +1,12 @@
 package id.technomotion.ui.groupchatcreation;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
+import android.net.Uri;
+import android.support.v4.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -10,9 +15,11 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -32,7 +39,7 @@ import id.technomotion.repository.RepositoryTransactionListener;
  * Created by omayib on 05/11/17.
  */
 
-public class GroupChatCreationActivity extends Activity implements RepositoryTransactionListener, ViewHolder.OnContactClickedListener, View.OnClickListener, GroupNameDialogFragment.OnGroupNameCreatedListener {
+public class GroupChatCreationActivity extends AppCompatActivity implements RepositoryTransactionListener, ViewHolder.OnContactClickedListener, View.OnClickListener, GroupNameDialogFragment.OnGroupNameCreatedListener,GroupInfoFragment.OnFragmentInteractionListener {
     private static final String TAG = "GroupChatCreationActivity";
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
@@ -51,9 +58,11 @@ public class GroupChatCreationActivity extends Activity implements RepositoryTra
         setContentView(R.layout.activity_alumni_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        toolbar.setTitle("Select contact");
+        toolbar.setVisibility(View.GONE);
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
-
+        this.setTitle("Select Participants");
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         nextFab = (FloatingActionButton) findViewById(R.id.nextFloatingButton);
         viewGroupCreation = findViewById(R.id.newGroupLayout);
         viewChatWithStranger = findViewById(R.id.chatWithStrangerLayout);
@@ -123,8 +132,15 @@ public class GroupChatCreationActivity extends Activity implements RepositoryTra
     @Override
     public void onClick(View view) {
         if (selectedContactIsMoreThanOne()){
-            GroupNameDialogFragment dialogFragment = new GroupNameDialogFragment(this);
-            dialogFragment.show(getFragmentManager(),"show_group_name");
+
+            Fragment fr =  GroupInfoFragment.newInstance("12","23");
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.frameLayout, fr)
+                    .addToBackStack( "tag" )
+                    .commit();
+
+            //GroupNameDialogFragment dialogFragment = new GroupNameDialogFragment(this);
+            //dialogFragment.show(getFragmentManager(),"show_group_name");
         }else{
             Toast.makeText(this, "select at least one", Toast.LENGTH_SHORT).show();
         }
@@ -138,4 +154,23 @@ public class GroupChatCreationActivity extends Activity implements RepositoryTra
     public void onGroupNameCreated(String groupName) {
         createGroupChat(groupName);
     }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+    public boolean onOptionsItemSelected(MenuItem item){
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frameLayout);
+        if (!currentFragment.isVisible()) {
+            finish();
+        }
+        else {
+            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.remove(currentFragment);
+            fragmentTransaction.commit();
+        }
+
+        return true;
+    }
+
 }

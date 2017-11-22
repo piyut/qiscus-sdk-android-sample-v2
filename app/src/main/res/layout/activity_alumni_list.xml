@@ -76,5 +76,9 @@
         app:backgroundTint="#ff1200"
         app:srcCompat="@android:drawable/ic_media_play" />
 
-
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
 </RelativeLayout>

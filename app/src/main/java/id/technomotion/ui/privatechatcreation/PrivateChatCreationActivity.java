@@ -6,10 +6,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -30,7 +32,7 @@ import retrofit2.HttpException;
  * Created by omayib on 18/09/17.
  */
 
-public class PrivateChatCreationActivity extends Activity implements RepositoryTransactionListener, ViewHolder.OnContactClickedListener, View.OnClickListener,ChatWithStrangerDialogFragment.onStrangerNameInputtedListener {
+public class PrivateChatCreationActivity extends AppCompatActivity implements RepositoryTransactionListener, ViewHolder.OnContactClickedListener, View.OnClickListener,ChatWithStrangerDialogFragment.onStrangerNameInputtedListener {
     private static final String TAG = "PrivateChatCreationActivity";
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
@@ -45,8 +47,13 @@ public class PrivateChatCreationActivity extends Activity implements RepositoryT
         setContentView(R.layout.activity_alumni_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        toolbar.setTitle("Select contact");
-        toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
+        //toolbar.setTitle("Select contact");
+        //toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
+        toolbar.setVisibility(View.GONE);
+
+        this.setTitle("Create New Chat");
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         viewGroupCreation = findViewById(R.id.newGroupLayout);
         viewChatWithStranger = findViewById(R.id.chatWithStrangerLayout);
@@ -121,7 +128,7 @@ public class PrivateChatCreationActivity extends Activity implements RepositoryT
 
             case R.id.newGroupLayout:
                 startActivity(new Intent(this, GroupChatCreationActivity.class));
-                finish();
+                //finish();
                 break;
 
             case R.id.chatWithStrangerLayout:
@@ -164,5 +171,9 @@ public class PrivateChatCreationActivity extends Activity implements RepositoryT
 
     private void showError(String error) {
         Toast.makeText(this,error,Toast.LENGTH_SHORT).show();
+    }
+    public boolean onOptionsItemSelected(MenuItem item){
+        finish();
+        return true;
     }
 }
