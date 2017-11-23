@@ -15,11 +15,13 @@
 
     <LinearLayout
         android:layout_below="@id/my_toolbar"
+        android:layout_marginLeft="16dp"
         android:id="@+id/newGroupLayout"
         android:layout_width="match_parent"
         android:gravity="center_vertical"
         android:layout_height="wrap_content"
         android:padding="8dp"
+        android:layout_marginBottom="8dp"
         android:orientation="horizontal">
         <ImageView
             android:layout_width="35dp"
@@ -37,12 +39,14 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_marginLeft="16dp"
         android:layout_below="@id/newGroupLayout"
         android:id="@+id/chatWithStrangerLayout"
         android:layout_width="match_parent"
         android:gravity="center_vertical"
         android:layout_height="wrap_content"
         android:padding="8dp"
+        android:layout_marginBottom="16dp"
         android:orientation="horizontal">
         <ImageView
             android:layout_width="35dp"
@@ -56,10 +60,32 @@
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:layout_marginLeft="2dp"
             android:text="@string/chat_with_stranger"/>
+
     </LinearLayout>
 
+    <View
+        android:id="@+id/underline"
+        android:background="#FF000000"
+        android:layout_height="0.0001dp"
+        android:layout_width="fill_parent"
+        android:layout_above="@id/contacts_text"
+        android:layout_marginTop="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Contacts"
+        android:layout_below="@id/chatWithStrangerLayout"
+        android:textColor="@color/orangeIcon"
+        android:id="@+id/contacts_text"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginLeft="16dp"
+        />
     <android.support.v7.widget.RecyclerView
-        android:layout_below="@+id/chatWithStrangerLayout"
+        android:layout_below="@+id/contacts_text"
         android:id="@+id/recyclerViewAlumni"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

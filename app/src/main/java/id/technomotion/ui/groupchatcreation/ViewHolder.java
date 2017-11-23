@@ -23,7 +23,8 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private static final String TAG = "ViewHolder";
     private TextView itemName;
     private TextView itemJob;
-    private ImageView picture;
+    private com.qiscus.sdk.ui.view.QiscusCircularImageView picture;
+    //private ImageView picture;
     private SelectableContact selectedContact;
     private CheckBox checkBox;
     private final ViewHolder.OnContactClickedListener listener;
@@ -33,7 +34,7 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);
         itemName = (TextView) itemView.findViewById(R.id.textViewName);
         itemJob = (TextView) itemView.findViewById(R.id.textViewJob);
-        picture = (ImageView) itemView.findViewById(R.id.imageViewProfile);
+        picture = (com.qiscus.sdk.ui.view.QiscusCircularImageView) itemView.findViewById(R.id.imageViewProfile);
         this.listener = listener;
 
         itemView.setOnClickListener(this);checkBox.setOnCheckedChangeListener(this);
