@@ -98,7 +98,6 @@ public class PrivateChatCreationActivity extends AppCompatActivity implements Re
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Qiscus.buildChatWith(userEmail)
-                                .withSubtitle("Consultation")
                                 .build(PrivateChatCreationActivity.this, new Qiscus.ChatActivityBuilderListener() {
                                     @Override
                                     public void onSuccess(Intent intent) {

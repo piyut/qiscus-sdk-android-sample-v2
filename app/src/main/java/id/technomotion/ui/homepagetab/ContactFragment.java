@@ -105,7 +105,6 @@ public class ContactFragment extends Fragment implements RepositoryTransactionLi
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Qiscus.buildChatWith(userEmail)
-                                .withSubtitle("Consultation")
                                 .build(getActivity(), new Qiscus.ChatActivityBuilderListener() {
                                     @Override
                                     public void onSuccess(Intent intent) {
