@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.qiscus.sdk.Qiscus;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -75,18 +76,21 @@ public class RemoteRepository  implements Repository {
 
     private ArrayList<Person> parseAlumnus(JsonObject body) {
         ArrayList<Person> people = new ArrayList<>();
-
+        String currentUsername = Qiscus.getQiscusAccount().getUsername();
         JsonArray userArray = body.get("results").getAsJsonObject().get("users").getAsJsonArray();
 
         for(JsonElement element: userArray){
             JsonObject personElement = element.getAsJsonObject();
-            Person person = new Person();
-            person.setId(personElement.get("id").getAsString());
-            person.setName(personElement.get("name").getAsString());
-            person.setEmail(personElement.get("email").getAsString());
-            person.setJob(personElement.get("name").getAsString());
-            person.setAvatarUrl(personElement.get("avatar_url").getAsString());
-            people.add(person);
+            String username = personElement.get("username").getAsString();
+            if (!currentUsername.equals(username)) {
+                Person person = new Person();
+                person.setId(personElement.get("id").getAsString());
+                person.setName(personElement.get("name").getAsString());
+                person.setEmail(personElement.get("email").getAsString());
+                person.setJob(personElement.get("name").getAsString());
+                person.setAvatarUrl(personElement.get("avatar_url").getAsString());
+                people.add(person);
+            }
         }
 
         return people;
