@@ -25,12 +25,10 @@ import retrofit2.Response;
 
 public class RemoteRepository  implements Repository {
     private static final String TAG = "RemoteRepository";
-    private OkHttpClient okHttpClient;
     public RemoteRepository() {
-        okHttpClient = new OkHttpClient();
+
     }
     ArrayList<Person> alumnus = new ArrayList<>();
-    private String url="http://dashboard-sample.herokuapp.com/rest/contacts";
 
     @Override
     public void loadAll(final RepositoryCallback<List<Person>> callback) {

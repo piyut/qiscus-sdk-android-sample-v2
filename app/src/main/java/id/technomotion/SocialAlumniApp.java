@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.qiscus.sdk.Qiscus;
 
+import id.technomotion.util.Configuration;
 import io.realm.Realm;
 
 /**
@@ -18,7 +19,7 @@ public class SocialAlumniApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Qiscus.init(this,"sampleapp-65ghcsaysse");
+        Qiscus.init(this, Configuration.QISCUS_APP_ID);
 
         Qiscus.getChatConfig()
                 .setStatusBarColor(R.color.colorPrimaryDark)

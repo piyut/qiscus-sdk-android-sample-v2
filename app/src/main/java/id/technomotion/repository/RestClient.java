@@ -2,6 +2,7 @@ package id.technomotion.repository;
 import android.support.annotation.NonNull;
 
 
+import id.technomotion.util.Configuration;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -11,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class RestClient {
-    private String url="http://dashboard-sample.herokuapp.com/api/";
+    private String url= Configuration.BASE_URL;
     private static RestClient ourInstance;
 
     private RestClient() {
