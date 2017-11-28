@@ -26,7 +26,7 @@ public class HomePageTabActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Recent Conversation"));
+        tabLayout.addTab(tabLayout.newTab().setText("Recent Room"));
         tabLayout.addTab(tabLayout.newTab().setText("Contacts"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 

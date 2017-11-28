@@ -100,7 +100,7 @@
         android:layout_alignParentRight="true"
         android:layout_margin="32dp"
         android:visibility="gone"
-        app:backgroundTint="#ff1200"
+        app:backgroundTint="@color/colorPrimary"
         app:srcCompat="@android:drawable/ic_media_play" />
 
     <FrameLayout
