@@ -32,6 +32,7 @@ public class SocialAlumniApp extends Application {
                 .setEmptyRoomImageResource((R.drawable.ic_room_empty))
                 .setNotificationSmallIcon(R.drawable.ic_logo_qiscus_small)
                 .setNotificationBigIcon(R.drawable.ic_logo_qiscus)
+                .setEmptyRoomTitleColor(R.color.orangeIcon)
                 .setAccentColor(R.color.colorAccent);
         Realm.init(this);
     }
