@@ -1,5 +1,7 @@
 package id.technomotion.model;
 
+import java.io.Serializable;
+
 import io.realm.RealmModel;
 import io.realm.annotations.RealmClass;
 
@@ -7,7 +9,7 @@ import io.realm.annotations.RealmClass;
  * Created by omayib on 18/09/17.
  */
 
-public class Person {
+public class Person implements Serializable{
     private  String id;
     private  String name;
     private  String email;

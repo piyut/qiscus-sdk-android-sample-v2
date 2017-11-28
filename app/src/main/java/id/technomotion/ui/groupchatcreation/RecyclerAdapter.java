@@ -23,6 +23,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
+    public RecyclerAdapter(ArrayList<Person> persons,ViewHolder.OnContactClickedListener listener,boolean isSelected) {
+        this.listener = listener;
+        for (Person person :
+                persons) {
+            this.contacts.add(new SelectableContact(person,isSelected));
+        }
+    }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

@@ -1,17 +1,10 @@
 package id.technomotion.ui.groupchatcreation;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
-import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -34,6 +27,7 @@ import id.technomotion.R;
 import id.technomotion.model.Person;
 import id.technomotion.repository.AlumnusRepository;
 import id.technomotion.repository.RepositoryTransactionListener;
+import id.technomotion.ui.privatechatcreation.PrivateChatCreationActivity;
 
 /**
  * Created by omayib on 05/11/17.
@@ -45,6 +39,7 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerAdapter mAdapter;
     private ArrayList<Person> alumnusList;
+    private ArrayList<Person> selectedList = new ArrayList<>();
     private AlumnusRepository alumnusRepository;
     private View viewGroupCreation,viewChatWithStranger;
     private ArrayList<String> contacts = new ArrayList<>();
@@ -104,8 +99,17 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
     @Override
     protected void onResume() {
         super.onResume();
-        alumnusRepository.loadAll();
+        if  (!isFragmentOn()) {
+            alumnusRepository.loadAll();
+        }
     }
+
+    private boolean isFragmentOn() {
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frameLayout);
+        return !(currentFragment == null || !currentFragment.isVisible());
+
+    }
+
     @Override
     public void onLoadAlumnusSucceeded(final List<Person> alumnus) {
         runOnUiThread(new Runnable() {
@@ -131,19 +135,38 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
 
     @Override
     public void onClick(View view) {
-        if (selectedContactIsMoreThanOne()){
+        if (isFragmentOn())
+            {
+                GroupInfoFragment currentFragment = (GroupInfoFragment) getSupportFragmentManager().findFragmentById(R.id.frameLayout);
+                currentFragment.proceedCreateGroup();
+            }
+        else
+            {
+                if (selectedContactIsMoreThanOne()){
+                    selectedList.clear();
+                    for (Person person: alumnusList){
+                        for (String  email: contacts)
+                        {
+                            if (email.equals(person.getEmail())) {
+                                selectedList.add(person);
+                                Toast.makeText(this,person.getEmail(),Toast.LENGTH_SHORT);
+                            }
+                        }
 
-            Fragment fr =  GroupInfoFragment.newInstance(contacts,"23");
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.frameLayout, fr)
-                    .addToBackStack( "tag" )
-                    .commit();
+                    }
+                    Fragment fr =  GroupInfoFragment.newInstance(contacts,selectedList);
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.frameLayout, fr)
+                            .addToBackStack( "tag" )
+                            .commit();
 
-            //GroupNameDialogFragment dialogFragment = new GroupNameDialogFragment(this);
-            //dialogFragment.show(getFragmentManager(),"show_group_name");
-        }else{
-            Toast.makeText(this, "select at least one", Toast.LENGTH_SHORT).show();
-        }
+                    //GroupNameDialogFragment dialogFragment = new GroupNameDialogFragment(this);
+                    //dialogFragment.show(getFragmentManager(),"show_group_name");
+                }else{
+                    Toast.makeText(this, "select at least one", Toast.LENGTH_SHORT).show();
+                }
+            }
+
     }
 
     private boolean selectedContactIsMoreThanOne(){
@@ -160,17 +183,34 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
 
     }
     public boolean onOptionsItemSelected(MenuItem item){
+        onReturn();
+
+        return true;
+    }
+
+    private void onReturn() {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frameLayout);
         if (currentFragment == null || !currentFragment.isVisible() ) {
+            startActivity(new Intent(this, PrivateChatCreationActivity.class));
             finish();
         }
         else {
-            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.remove(currentFragment);
-            fragmentTransaction.commit();
+//            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//            fragmentTransaction.remove(currentFragment);
+//
+//            getSupportFragmentManager().popBackStack();
+//            fragmentTransaction.commit();
+            Toast.makeText(this,"remove fragment",Toast.LENGTH_SHORT);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .remove(currentFragment)
+                    .commit();
         }
+    }
 
-        return true;
+    @Override
+    public void onBackPressed() {
+        onReturn();
     }
 
 }

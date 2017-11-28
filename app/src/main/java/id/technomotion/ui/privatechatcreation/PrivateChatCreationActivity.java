@@ -127,7 +127,7 @@ public class PrivateChatCreationActivity extends AppCompatActivity implements Re
 
             case R.id.newGroupLayout:
                 startActivity(new Intent(this, GroupChatCreationActivity.class));
-                //finish();
+                finish();
                 break;
 
             case R.id.chatWithStrangerLayout:

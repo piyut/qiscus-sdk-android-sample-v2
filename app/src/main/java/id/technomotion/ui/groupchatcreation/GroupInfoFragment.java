@@ -14,6 +14,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 import id.technomotion.R;
+import id.technomotion.model.Person;
 import id.technomotion.ui.privatechatcreation.PrivateChatCreationActivity;
 import id.technomotion.util.FileUtil;
 import rx.Scheduler;
@@ -50,10 +53,11 @@ import rx.schedulers.Schedulers;
 import android.view.View.OnClickListener;
 
 
-public class GroupInfoFragment extends Fragment implements View.OnClickListener {
+public class GroupInfoFragment extends Fragment implements View.OnClickListener,ViewHolder.OnContactClickedListener {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static String CONTACT_KEY = "CONTACT_KEY";
+    private static String PERSON_KEY = "PERSON_KEY";
     private static String selectMore = "select at least one";
     private static String groupNameFormat = "Please input group name";
     // TODO: Rename parameter arguments, choose names that match
@@ -61,14 +65,18 @@ public class GroupInfoFragment extends Fragment implements View.OnClickListener 
     private final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1000;
     private final int GET_GALLERY_IMAGE_REQUEST_CODE = 1001;
     com.qiscus.sdk.ui.view.QiscusCircularImageView uploadIcon;
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLinearLayoutManager;
+    private RecyclerAdapter mAdapter;
     private ProgressDialog progressDialog;
     private ArrayList<String> contacts = new ArrayList<>();
+    private ArrayList<Person> personList;
     // TODO: Rename and change types of parameters
-    private String avatarUrl="";
-    private String mParam1;
-    private String mParam2;
+    private String avatarUrl = "";
     private OnFragmentInteractionListener mListener;
     private Toast mToast;
+    private FloatingActionButton nextFab;
+    private EditText groupNameView;
 
     public GroupInfoFragment() {
         // Required empty public constructor
@@ -78,18 +86,17 @@ public class GroupInfoFragment extends Fragment implements View.OnClickListener 
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param2 Parameter 2.
      * @return A new instance of fragment GroupInfoFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static GroupInfoFragment newInstance(ArrayList<String> contactsList, String param2) {
+    public static GroupInfoFragment newInstance(ArrayList<String> contactsList, ArrayList<Person> personList) {
         GroupInfoFragment fragment = new GroupInfoFragment();
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(CONTACT_KEY, contactsList);
         fragment.setArguments(bundle);
 
-        bundle.putString(ARG_PARAM2, param2);
+        bundle.putSerializable(PERSON_KEY, personList);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -98,9 +105,7 @@ public class GroupInfoFragment extends Fragment implements View.OnClickListener 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+            }
         setHasOptionsMenu(true);
     }
 
@@ -110,17 +115,25 @@ public class GroupInfoFragment extends Fragment implements View.OnClickListener 
         // Inflate the layout for this fragment
         contacts = (ArrayList<String>) getArguments().getSerializable(
                 CONTACT_KEY);
+        personList = (ArrayList<Person>) getArguments().getSerializable(
+                PERSON_KEY);
         android.support.v7.app.ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Add Group Info");
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Please wait...");
-        FloatingActionButton nextFab = (FloatingActionButton) getActivity().findViewById(R.id.nextFloatingButton);
-        nextFab.setOnClickListener(this);
+
         View view = inflater.inflate(R.layout.fragment_group_info, container, false);
+        nextFab = (FloatingActionButton) view.findViewById(R.id.nextFragmentFloatingButton);
+        nextFab.setOnClickListener(this);
         uploadIcon = (com.qiscus.sdk.ui.view.QiscusCircularImageView) view.findViewById(R.id.upload_icon);
         uploadIcon.setOnClickListener(this);
-
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewSelected);
+        mLinearLayoutManager = new LinearLayoutManager(getActivity().getBaseContext());
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        groupNameView = (EditText) view.findViewById(R.id.group_name_input);
+        mAdapter = new RecyclerAdapter(personList, this,true);
+        mRecyclerView.setAdapter(mAdapter);
         return view;//  inflater.inflate(R.layout.fragment_group_info, container, false);
     }
 
@@ -150,10 +163,9 @@ public class GroupInfoFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onClick(View view) {
-        EditText groupNameView = (EditText) getView().findViewById(R.id.group_name_input);
-        String groupName = groupNameView.getText().toString();
-        boolean groupNameInputted = groupName.trim().length() > 0;
-        uploadIcon = (com.qiscus.sdk.ui.view.QiscusCircularImageView) getView().findViewById(R.id.upload_icon);
+
+
+
         switch (view.getId()) {
             case R.id.upload_icon:
                 PopupMenu popup = new PopupMenu(getActivity(), uploadIcon);
@@ -177,22 +189,31 @@ public class GroupInfoFragment extends Fragment implements View.OnClickListener 
                 popup.show();
                 break;
 
+            /*case R.id.nextFloatingButton:
+                proceedCreateGroup();
+                break;*/
+
             default:
-                if (groupNameInputted && selectedContactIsMoreThanOne()) {
-                    createGroupChat(groupName);
-
-
-                    //GroupNameDialogFragment dialogFragment = new GroupNameDialogFragment(this);
-                    //dialogFragment.show(getFragmentManager(),"show_group_name");
-                } else {
-                    String warningText = (groupNameInputted) ? selectMore : groupNameFormat;
-                    showToast(warningText);
-                }
-                break;
+              break;
 
         }
 
 
+    }
+
+    public void proceedCreateGroup() {
+        String groupName = groupNameView.getText().toString();
+        boolean groupNameInputted = groupName.trim().length() > 0;
+        if (groupNameInputted && selectedContactIsMoreThanOne()) {
+            createGroupChat(groupName);
+
+
+            //GroupNameDialogFragment dialogFragment = new GroupNameDialogFragment(this);
+            //dialogFragment.show(getFragmentManager(),"show_group_name");
+        } else {
+            String warningText = (groupNameInputted) ? selectMore : groupNameFormat;
+            showToast(warningText);
+        }
     }
 
     private boolean selectedContactIsMoreThanOne() {
@@ -205,19 +226,22 @@ public class GroupInfoFragment extends Fragment implements View.OnClickListener 
         Qiscus.buildGroupChatRoom(groupName, contacts)
                 .withAvatar(avatarUrl)
                 .build(new Qiscus.ChatBuilderListener() {
-            @Override
-            public void onSuccess(QiscusChatRoom qiscusChatRoom) {
-                progressDialog.dismiss();
-                startActivity(QiscusGroupChatActivity.generateIntent(getActivity(), qiscusChatRoom));
-                getActivity().finish();
-            }
+                    @Override
+                    public void onSuccess(QiscusChatRoom qiscusChatRoom) {
+                        progressDialog.dismiss();
+                        //startActivity(QiscusGroupChatActivity.generateIntent(getActivity(), qiscusChatRoom));
+                        Intent intent = new Intent(QiscusGroupChatActivity.generateIntent(getActivity(), qiscusChatRoom));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        getActivity().finish();
+                    }
 
-            @Override
-            public void onError(Throwable throwable) {
-                progressDialog.dismiss();
-                throwable.printStackTrace();
-            }
-        });
+                    @Override
+                    public void onError(Throwable throwable) {
+                        progressDialog.dismiss();
+                        throwable.printStackTrace();
+                    }
+                });
     }
 
     private void openCamera() {
@@ -257,8 +281,8 @@ public class GroupInfoFragment extends Fragment implements View.OnClickListener 
         if (requestCode == GET_GALLERY_IMAGE_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 Uri selectedImage = data.getData();
-               String imagePath = FileUtil.getRealPathFromUri(getContext(), selectedImage);
-               processImage(imagePath);
+                String imagePath = FileUtil.getRealPathFromUri(getContext(), selectedImage);
+                processImage(imagePath);
             }
         } else if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
@@ -319,6 +343,18 @@ public class GroupInfoFragment extends Fragment implements View.OnClickListener 
         if (mToast != null) mToast.cancel();
         mToast = Toast.makeText(getActivity(), message, Toast.LENGTH_LONG);
         mToast.show();
+    }
+
+    @SuppressLint("LongLogTag")
+    @Override
+    public void onContactSelected(String userEmail) {
+        if (!contacts.contains(userEmail))contacts.add(userEmail);
+    }
+
+    @SuppressLint("LongLogTag")
+    @Override
+    public void onContactUnselected(String userEmail) {
+        if(contacts.contains(userEmail))contacts.remove(userEmail);
     }
 
     public interface Callback {

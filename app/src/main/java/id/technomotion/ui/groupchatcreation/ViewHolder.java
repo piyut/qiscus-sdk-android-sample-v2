@@ -65,13 +65,16 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        this.selectedContact.setSelected(this.checkBox.isChecked());
+        if (this.selectedContact != null) {
+            this.selectedContact.setSelected(this.checkBox.isChecked());
 
-        if(this.checkBox.isChecked()){
-            this.listener.onContactSelected(this.selectedContact.getEmail());
-        }else{
-            this.listener.onContactUnselected(this.selectedContact.getEmail());
+            if(this.checkBox.isChecked()){
+                this.listener.onContactSelected(this.selectedContact.getEmail());
+            }else{
+                this.listener.onContactUnselected(this.selectedContact.getEmail());
+            }
         }
+
     }
 
     public interface OnContactClickedListener{
