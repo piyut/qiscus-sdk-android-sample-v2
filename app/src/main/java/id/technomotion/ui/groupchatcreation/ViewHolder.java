@@ -58,8 +58,10 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         this.selectedContact.setSelected(this.checkBox.isChecked());
 
         if (this.checkBox.isChecked()) {
+            this.checkBox.setVisibility(View.VISIBLE);
             this.listener.onContactSelected(this.selectedContact.getEmail());
         } else {
+            this.checkBox.setVisibility(View.INVISIBLE);
             this.listener.onContactUnselected(this.selectedContact.getEmail());
         }
     }

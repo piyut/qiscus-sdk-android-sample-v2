@@ -17,6 +17,7 @@
             app:srcCompat="@drawable/ic_default_avatar" />
         <CheckBox
             android:layout_gravity="center"
+            android:visibility="invisible"
             android:id="@+id/checkbox"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
