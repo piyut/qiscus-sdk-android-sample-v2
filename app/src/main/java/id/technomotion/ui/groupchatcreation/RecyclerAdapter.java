@@ -43,16 +43,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final SelectableContact person = contacts.get(position);
-        if (person.getEmail().equals("ganteng")) {
-
-        }
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TextView name = (TextView) view.findViewById(R.id.textViewName);
-                name.setText("EAEAEA");
-            }
-        });
         holder.bindAlumni(person);
     }
 
