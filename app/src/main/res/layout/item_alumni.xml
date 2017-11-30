@@ -5,43 +5,52 @@
     android:gravity="center_vertical"
     android:layout_marginBottom="12dp"
     android:layout_height="wrap_content">
-    <com.qiscus.sdk.ui.view.QiscusCircularImageView
-        android:id="@+id/imageViewProfile"
+    <FrameLayout
+        android:id="@+id/imageViewFrame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <com.qiscus.sdk.ui.view.QiscusCircularImageView
+            android:id="@+id/imageViewProfile"
 
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        app:srcCompat="@drawable/ic_default_avatar" />
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:srcCompat="@drawable/ic_default_avatar" />
+        <CheckBox
+            android:layout_gravity="center"
+            android:id="@+id/checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:button="@drawable/custom_checkbox"
+            />
+    </FrameLayout>
+
 
     <LinearLayout
-        android:layout_toRightOf="@+id/imageViewProfile"
-        android:layout_toLeftOf="@+id/checkbox"
+        android:layout_toRightOf="@+id/imageViewFrame"
         android:id="@+id/view1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:orientation="vertical">
         <TextView
             android:id="@+id/textViewName"
             android:layout_width="279dp"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="8dp"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/imageViewProfile"
+            android:layout_toEndOf="@+id/imageViewFrame"
             android:text="TextView"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <TextView
-            android:layout_marginLeft="16dp"
             android:id="@+id/textViewJob"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_below="@+id/textViewName"
             android:layout_toEndOf="@+id/imageViewProfile"
-            android:text="TextView" />
+            android:text="TextView"
+
+            android:visibility="gone"/>
     </LinearLayout>
-    <CheckBox
-        android:layout_centerVertical="true"
-        android:id="@+id/checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"/>
+
 </RelativeLayout>

@@ -26,9 +26,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.privatechatcreation.PrivateChatCreationActivity" />
+        <activity android:name=".ui.privatechatcreation.PrivateChatCreationActivity"
+            android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".ui.login.LoginActivity" />
         <activity android:name=".ui.groupchatcreation.GroupChatCreationActivity"
+            android:windowSoftInputMode="stateHidden"
             android:parentActivityName=".ui.privatechatcreation.PrivateChatCreationActivity"/>
         <activity android:name=".ui.recentconversation.RecentConversationsActivity" />
         <activity android:name=".ui.homepagetab.HomePageTabActivity"

@@ -10,9 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.qiscus.sdk.Qiscus;
@@ -26,6 +29,7 @@ import id.technomotion.model.Person;
 import id.technomotion.repository.AlumnusRepository;
 import id.technomotion.repository.RepositoryTransactionListener;
 import id.technomotion.ui.groupchatcreation.GroupChatCreationActivity;
+import id.technomotion.ui.homepagetab.ContactFragment;
 import retrofit2.HttpException;
 
 /**
@@ -40,6 +44,7 @@ public class PrivateChatCreationActivity extends AppCompatActivity implements Re
     private ArrayList<Person> alumnusList;
     private AlumnusRepository alumnusRepository;
     private View viewGroupCreation,viewChatWithStranger;
+    public EditText search;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,7 +59,7 @@ public class PrivateChatCreationActivity extends AppCompatActivity implements Re
         this.setTitle("Create New Chat");
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
+        search = (EditText) findViewById( R.id.search);
         viewGroupCreation = findViewById(R.id.newGroupLayout);
         viewChatWithStranger = findViewById(R.id.chatWithStrangerLayout);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewAlumni);
@@ -69,6 +74,7 @@ public class PrivateChatCreationActivity extends AppCompatActivity implements Re
 
         viewGroupCreation.setOnClickListener(this);
         viewChatWithStranger.setOnClickListener(this);
+        addTextListener();
     }
 
     @Override
@@ -154,7 +160,7 @@ public class PrivateChatCreationActivity extends AppCompatActivity implements Re
                             HttpException e = (HttpException) throwable;
                             try {
                                 String errorMessage = e.response().errorBody().string();
-                                Log.e(TAG, errorMessage);
+                                //Log.e(TAG, errorMessage);
                                 showError(errorMessage);
                             } catch (IOException e1) {
                                 e1.printStackTrace();
@@ -174,5 +180,34 @@ public class PrivateChatCreationActivity extends AppCompatActivity implements Re
     public boolean onOptionsItemSelected(MenuItem item){
         finish();
         return true;
+    }
+
+    public void addTextListener(){
+
+        search.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {}
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence query, int start, int before, int count) {
+
+                query = query.toString().toLowerCase();
+
+                final ArrayList<Person> filteredList = new ArrayList<>();
+
+                for (int i = 0; i < alumnusList.size(); i++) {
+
+                    final String text = alumnusList.get(i).getEmail().toLowerCase();
+                    if (text.contains(query)) {
+
+                        filteredList.add(alumnusList.get(i));
+                    }
+                }
+                mAdapter = new RecyclerAdapter(filteredList,PrivateChatCreationActivity.this);
+                mRecyclerView.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();  // data set changed
+            }
+        });
     }
 }

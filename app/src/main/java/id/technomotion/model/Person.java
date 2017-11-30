@@ -15,7 +15,7 @@ public class Person implements Serializable{
     private  String email;
     private  String job;
     private  String avatarUrl;
-
+    private boolean isSelected = false;
     public Person()  {
 
     }
@@ -65,5 +65,13 @@ public class Person implements Serializable{
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.isSelected = selected;
     }
 }

@@ -4,7 +4,19 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <EditText
+        android:id="@+id/search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:textSize="16sp"
+        android:hint="Search here"
+        android:layout_marginTop="20dp"
+        android:windowSoftInputMode="stateUnchanged"/>
     <android.support.v7.widget.RecyclerView
+        android:layout_below="@id/search"
         android:id="@+id/recyclerViewAlumni"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

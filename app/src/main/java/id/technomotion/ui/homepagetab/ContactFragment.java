@@ -12,11 +12,15 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.qiscus.sdk.Qiscus;
@@ -43,6 +47,7 @@ public class ContactFragment extends Fragment implements RepositoryTransactionLi
     private ArrayList<Person> alumnusList;
     private AlumnusRepository alumnusRepository;
     private LinearLayout mEmptyRoomVIew;
+    public EditText search;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,9 +56,10 @@ public class ContactFragment extends Fragment implements RepositoryTransactionLi
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         super.onCreate(savedInstanceState);
         View v = getView();
-
+        search = (EditText) v.findViewById( R.id.search);
         mRecyclerView = (RecyclerView) v.findViewById(R.id.recyclerViewAlumni);
         mLinearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -64,7 +70,8 @@ public class ContactFragment extends Fragment implements RepositoryTransactionLi
         alumnusList = alumnusRepository.getCachedData();
         mAdapter = new RecyclerAdapter(alumnusList, this);
         mRecyclerView.setAdapter(mAdapter);
-        Log.d("SIZE",String.valueOf(alumnusList.size()));
+        addTextListener();
+        //Log.d("SIZE", String.valueOf(alumnusList.size()));
 
 
     }
@@ -155,7 +162,7 @@ public class ContactFragment extends Fragment implements RepositoryTransactionLi
                             HttpException e = (HttpException) throwable;
                             try {
                                 String errorMessage = e.response().errorBody().string();
-                                Log.e(TAG, errorMessage);
+                                //Log.e(TAG, errorMessage);
                                 showError(errorMessage);
                             } catch (IOException e1) {
                                 e1.printStackTrace();
@@ -171,5 +178,34 @@ public class ContactFragment extends Fragment implements RepositoryTransactionLi
 
     private void showError(String error) {
         Toast.makeText(getActivity().getApplicationContext(),error,Toast.LENGTH_SHORT).show();
+    }
+
+    public void addTextListener(){
+
+        search.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {}
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence query, int start, int before, int count) {
+
+                query = query.toString().toLowerCase();
+
+                final ArrayList<Person> filteredList = new ArrayList<>();
+
+                for (int i = 0; i < alumnusList.size(); i++) {
+
+                    final String text = alumnusList.get(i).getEmail().toLowerCase();
+                    if (text.contains(query)) {
+
+                        filteredList.add(alumnusList.get(i));
+                    }
+                }
+                mAdapter = new RecyclerAdapter(filteredList,ContactFragment.this);
+                mRecyclerView.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();  // data set changed
+            }
+        });
     }
 }

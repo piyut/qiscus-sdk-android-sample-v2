@@ -26,7 +26,7 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private com.qiscus.sdk.ui.view.QiscusCircularImageView picture;
     //private ImageView picture;
     private SelectableContact selectedContact;
-    private CheckBox checkBox;
+    public CheckBox checkBox;
     private final ViewHolder.OnContactClickedListener listener;
 
     public ViewHolder(View itemView, ViewHolder.OnContactClickedListener listener) {
