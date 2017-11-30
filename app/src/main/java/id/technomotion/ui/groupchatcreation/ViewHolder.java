@@ -37,10 +37,11 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         picture = (com.qiscus.sdk.ui.view.QiscusCircularImageView) itemView.findViewById(R.id.imageViewProfile);
         this.listener = listener;
 
-        itemView.setOnClickListener(this);checkBox.setOnCheckedChangeListener(this);
+        itemView.setOnClickListener(this);
+        checkBox.setOnCheckedChangeListener(this);
     }
 
-    public void bindAlumni(SelectableContact person){
+    public void bindAlumni(SelectableContact person) {
         this.checkBox.setChecked(person.isSelected());
         this.selectedContact = person;
         this.itemName.setText(person.getName());
@@ -53,32 +54,23 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     @Override
     public void onClick(final View v) {
         this.checkBox.setChecked(!this.selectedContact.isSelected());
-        Log.d("CHECK",String.valueOf(this.checkBox.isChecked()));
+        Log.d("CHECK", String.valueOf(this.checkBox.isChecked()));
         this.selectedContact.setSelected(this.checkBox.isChecked());
 
-        if(this.checkBox.isChecked()){
+        if (this.checkBox.isChecked()) {
             this.listener.onContactSelected(this.selectedContact.getEmail());
-        }else{
+        } else {
             this.listener.onContactUnselected(this.selectedContact.getEmail());
         }
     }
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        if (this.selectedContact != null) {
-            this.selectedContact.setSelected(this.checkBox.isChecked());
-
-            if(this.checkBox.isChecked()){
-                this.listener.onContactSelected(this.selectedContact.getEmail());
-            }else{
-                this.listener.onContactUnselected(this.selectedContact.getEmail());
-            }
-        }
-
     }
 
-    public interface OnContactClickedListener{
+    public interface OnContactClickedListener {
         void onContactSelected(String userEmail);
+
         void onContactUnselected(String userEmail);
     }
 }
