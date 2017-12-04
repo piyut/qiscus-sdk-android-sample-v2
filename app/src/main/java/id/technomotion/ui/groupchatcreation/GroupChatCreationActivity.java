@@ -37,11 +37,12 @@ import id.technomotion.ui.privatechatcreation.PrivateChatCreationActivity;
  * Created by omayib on 05/11/17.
  */
 
-public class GroupChatCreationActivity extends AppCompatActivity implements RepositoryTransactionListener, ViewHolder.OnContactClickedListener, View.OnClickListener, GroupNameDialogFragment.OnGroupNameCreatedListener,GroupInfoFragment.OnFragmentInteractionListener,GroupInfoFragment.MyEmailListener {
+public class GroupChatCreationActivity extends AppCompatActivity implements RepositoryTransactionListener, ViewHolder.OnContactClickedListener, View.OnClickListener, GroupNameDialogFragment.OnGroupNameCreatedListener,GroupInfoFragment.OnFragmentInteractionListener,GroupInfoFragment.MyEmailListener,SelectedViewHolder.OnContactClickedListener {
     private static final String TAG = "GroupChatCreationActivity";
-    private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLinearLayoutManager;
+    private RecyclerView mRecyclerView,mRecyclerViewSelected;
+    private LinearLayoutManager mLinearLayoutManager,mLinearLayoutManagerSelected;
     private RecyclerAdapter mAdapter;
+    private RecyclerSelectedAdapter mSelectedAdapter;
     private ArrayList<Person> alumnusList;
     private ArrayList<Person> selectedList = new ArrayList<>();
     private AlumnusRepository alumnusRepository;
@@ -68,8 +69,11 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
         viewGroupCreation = findViewById(R.id.newGroupLayout);
         viewChatWithStranger = findViewById(R.id.chatWithStrangerLayout);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewAlumni);
+        mRecyclerViewSelected = (RecyclerView) findViewById(R.id.recyclerViewSelected);
         mLinearLayoutManager = new LinearLayoutManager(this);
+        mLinearLayoutManagerSelected = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mRecyclerViewSelected.setLayoutManager(mLinearLayoutManagerSelected);
         alumnusRepository = new AlumnusRepository();
         alumnusRepository.setListener(this);
         progressDialog = new ProgressDialog(this);
@@ -82,6 +86,9 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
         //alumnusRepository.loadAll();
         mAdapter = new RecyclerAdapter((ArrayList<Person>) alumnusList, GroupChatCreationActivity.this);
         mRecyclerView.setAdapter(mAdapter);
+
+        mSelectedAdapter = new RecyclerSelectedAdapter( selectedList, GroupChatCreationActivity.this);
+        mRecyclerViewSelected.setAdapter(mSelectedAdapter);
         addTextListener();
     }
 
@@ -143,6 +150,13 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
         for (Person person : alumnusList) {
             if (person.getEmail().toLowerCase().equals(userEmail.toLowerCase())) {
                 person.setSelected(selected);
+                if (selected) {
+                  selectedList.add(person);
+                }
+                else {
+                  selectedList.remove(person);
+                }
+                mSelectedAdapter.notifyDataSetChanged();
             }
         }
         if (selected) {
@@ -275,5 +289,10 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
         mAdapter = new RecyclerAdapter(alumnusList,GroupChatCreationActivity.this);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onSelectionUnselected(String userEmail) {
+        processPerson(userEmail,false);
     }
 }
