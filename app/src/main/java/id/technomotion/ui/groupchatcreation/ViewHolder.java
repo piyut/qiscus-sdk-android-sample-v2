@@ -8,6 +8,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.qiscus.sdk.ui.view.QiscusCircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.UUID;
@@ -27,6 +28,7 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     //private ImageView picture;
     private SelectableContact selectedContact;
     public CheckBox checkBox;
+    public com.qiscus.sdk.ui.view.QiscusCircularImageView checkView;
     private final ViewHolder.OnContactClickedListener listener;
 
     public ViewHolder(View itemView, ViewHolder.OnContactClickedListener listener) {
@@ -35,6 +37,7 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         itemName = (TextView) itemView.findViewById(R.id.textViewName);
         itemJob = (TextView) itemView.findViewById(R.id.textViewJob);
         picture = (com.qiscus.sdk.ui.view.QiscusCircularImageView) itemView.findViewById(R.id.imageViewProfile);
+        checkView = (com.qiscus.sdk.ui.view.QiscusCircularImageView) itemView.findViewById(R.id.imageViewCheck);
         this.listener = listener;
 
         itemView.setOnClickListener(this);
@@ -43,6 +46,13 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     public void bindAlumni(SelectableContact person) {
         this.checkBox.setChecked(person.isSelected());
+        if (person.isSelected()) {
+            this.checkView.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            this.checkView.setVisibility(View.INVISIBLE);
+        }
         this.selectedContact = person;
         this.itemName.setText(person.getName());
         this.itemJob.setText(person.getJob());
@@ -58,10 +68,10 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         this.selectedContact.setSelected(this.checkBox.isChecked());
 
         if (this.checkBox.isChecked()) {
-            this.checkBox.setVisibility(View.VISIBLE);
+            this.checkView.setVisibility(View.VISIBLE);
             this.listener.onContactSelected(this.selectedContact.getEmail());
         } else {
-            this.checkBox.setVisibility(View.INVISIBLE);
+            this.checkView.setVisibility(View.INVISIBLE);
             this.listener.onContactUnselected(this.selectedContact.getEmail());
         }
     }

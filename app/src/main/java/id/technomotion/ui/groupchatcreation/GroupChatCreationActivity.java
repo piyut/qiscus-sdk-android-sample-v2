@@ -37,7 +37,7 @@ import id.technomotion.ui.privatechatcreation.PrivateChatCreationActivity;
  * Created by omayib on 05/11/17.
  */
 
-public class GroupChatCreationActivity extends AppCompatActivity implements RepositoryTransactionListener, ViewHolder.OnContactClickedListener, View.OnClickListener, GroupNameDialogFragment.OnGroupNameCreatedListener,GroupInfoFragment.OnFragmentInteractionListener {
+public class GroupChatCreationActivity extends AppCompatActivity implements RepositoryTransactionListener, ViewHolder.OnContactClickedListener, View.OnClickListener, GroupNameDialogFragment.OnGroupNameCreatedListener,GroupInfoFragment.OnFragmentInteractionListener,GroupInfoFragment.MyEmailListener {
     private static final String TAG = "GroupChatCreationActivity";
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
@@ -75,12 +75,13 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Please wait...");
         alumnusList = alumnusRepository.getCachedData();
-
         viewChatWithStranger.setVisibility(View.GONE);
         viewGroupCreation.setVisibility(View.GONE);
         nextFab.setVisibility(View.VISIBLE);
         nextFab.setOnClickListener(this);
-        alumnusRepository.loadAll();
+        //alumnusRepository.loadAll();
+        mAdapter = new RecyclerAdapter((ArrayList<Person>) alumnusList, GroupChatCreationActivity.this);
+        mRecyclerView.setAdapter(mAdapter);
         addTextListener();
     }
 
@@ -133,7 +134,6 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
     @Override
     public void onContactSelected(String userEmail) {
         if (!contacts.contains(userEmail)) {
-            contacts.add(userEmail);
             setPersonSelected(userEmail, true);
         }
 
@@ -142,9 +142,14 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
     private void setPersonSelected(String userEmail, boolean selected) {
         for (Person person : alumnusList) {
             if (person.getEmail().toLowerCase().equals(userEmail.toLowerCase())) {
-                Toast.makeText(this,userEmail+" is selected as " + String.valueOf(selected),Toast.LENGTH_SHORT).show();
                 person.setSelected(selected);
             }
+        }
+        if (selected) {
+            contacts.add(userEmail);
+        }
+        else {
+            contacts.remove(userEmail);
         }
     }
 
@@ -152,7 +157,6 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
     @Override
     public void onContactUnselected(String userEmail) {
         if(contacts.contains(userEmail)) {
-            contacts.remove(userEmail);
             setPersonSelected(userEmail, false);
         }
 
@@ -263,5 +267,13 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
                 mAdapter.notifyDataSetChanged();  // data set changed
             }
         });
+    }
+
+    @Override
+    public void processPerson(String email, boolean selected) {
+        setPersonSelected(email, selected);
+        mAdapter = new RecyclerAdapter(alumnusList,GroupChatCreationActivity.this);
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
     }
 }

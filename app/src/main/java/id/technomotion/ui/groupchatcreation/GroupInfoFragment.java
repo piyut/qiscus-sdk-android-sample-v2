@@ -65,6 +65,7 @@ public class GroupInfoFragment extends Fragment implements View.OnClickListener,
     private final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1000;
     private final int GET_GALLERY_IMAGE_REQUEST_CODE = 1001;
     com.qiscus.sdk.ui.view.QiscusCircularImageView uploadIcon;
+    private MyEmailListener emailListener;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerAdapter mAdapter;
@@ -152,6 +153,13 @@ public class GroupInfoFragment extends Fragment implements View.OnClickListener,
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
+        }
+
+        if (context instanceof MyEmailListener) {
+            emailListener = (MyEmailListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement MyEmailListener");
         }
     }
 
@@ -348,13 +356,20 @@ public class GroupInfoFragment extends Fragment implements View.OnClickListener,
     @SuppressLint("LongLogTag")
     @Override
     public void onContactSelected(String userEmail) {
-        if (!contacts.contains(userEmail))contacts.add(userEmail);
+        if (!contacts.contains(userEmail)) {
+            contacts.add(userEmail);
+            this.emailListener.processPerson(userEmail,true);
+        }
+
     }
 
     @SuppressLint("LongLogTag")
     @Override
     public void onContactUnselected(String userEmail) {
-        if(contacts.contains(userEmail))contacts.remove(userEmail);
+        if(contacts.contains(userEmail)) {
+            contacts.remove(userEmail);
+            this.emailListener.processPerson(userEmail,false);
+        }
     }
 
     public interface Callback {
@@ -367,7 +382,9 @@ public class GroupInfoFragment extends Fragment implements View.OnClickListener,
         void onFragmentInteraction(Uri uri);
     }
 
-
+    public interface MyEmailListener{
+        void processPerson(String email,boolean selected);
+    }
 }
 
 

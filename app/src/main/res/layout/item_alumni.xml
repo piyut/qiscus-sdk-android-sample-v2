@@ -23,6 +23,13 @@
             android:layout_height="match_parent"
             android:button="@drawable/custom_checkbox"
             />
+        <com.qiscus.sdk.ui.view.QiscusCircularImageView
+            android:id="@+id/imageViewCheck"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:visibility="invisible"
+            android:src="@drawable/ic_check"
+            android:background="#E52ACB6E" />
     </FrameLayout>
 
 
