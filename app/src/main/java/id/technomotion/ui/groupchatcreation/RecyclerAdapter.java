@@ -43,23 +43,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final SelectableContact person = contacts.get(position);
-        boolean newInitial;
-        char initial = person.getName().charAt(0);
-        newInitial = positionNewInitial(position,person);
-        holder.bindAlumni(person,newInitial,initial);
-    }
-
-    private boolean positionNewInitial(int position,SelectableContact currentPerson) {
-        boolean result;
-        if (position==0) {
-            result =true;
-        }
-        else {
-           SelectableContact beforePerson= contacts.get(position-1);
-           char currentInitial = currentPerson.getName().toLowerCase().charAt(0);
-           char beforeInitial = beforePerson.getName().toLowerCase().charAt(0);
-           result = !(currentInitial == beforeInitial);        }
-        return result;
+        holder.bindAlumni(person);
     }
 
     @Override

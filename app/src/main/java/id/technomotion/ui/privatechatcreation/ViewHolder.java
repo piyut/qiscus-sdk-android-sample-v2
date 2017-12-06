@@ -26,7 +26,7 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private Person selectedContact;
     private CheckBox checkBox;
     private final OnContactClickedListener listener;
-    private TextView initialText;
+
     public ViewHolder(View itemView, OnContactClickedListener listener) {
         super(itemView);
         checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);
@@ -34,20 +34,12 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         itemJob = (TextView) itemView.findViewById(R.id.textViewJob);
         picture = (com.qiscus.sdk.ui.view.QiscusCircularImageView) itemView.findViewById(R.id.imageViewProfile);
         this.listener = listener;
-        initialText = (TextView) itemView.findViewById(R.id.textInitial);
+
         itemView.setOnClickListener(this);
         checkBox.setVisibility(View.GONE);
     }
 
-    public void bindAlumni(Person person,boolean isNewInitial, char newInitial) {
-        if (isNewInitial) {
-            this.initialText.setVisibility(View.VISIBLE);
-            this.initialText.setText(String.valueOf(newInitial).toUpperCase());
-        }
-        else
-        {
-            this.initialText.setVisibility(View.INVISIBLE);
-        }
+    public void bindAlumni(Person person){
         this.selectedContact = person;
         this.itemName.setText(person.getName());
         this.itemJob.setText(person.getJob());

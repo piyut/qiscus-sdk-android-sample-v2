@@ -5,22 +5,7 @@
     android:gravity="center_vertical"
     android:layout_marginBottom="12dp"
     android:layout_height="wrap_content">
-    <RelativeLayout
-        android:id="@+id/initial"
-        android:layout_width="72dp"
-        android:layout_height="match_parent">
-        <TextView
-            android:id="@+id/textInitial"
-            android:layout_centerVertical="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="A"
-            android:textSize="24dp"
-            android:textColor="@color/orangeIcon"/>
-    </RelativeLayout>
-
     <FrameLayout
-        android:layout_toRightOf="@id/initial"
         android:id="@+id/imageViewFrame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -63,7 +48,6 @@
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/imageViewFrame"
             android:text="TextView"
-            android:textSize="14sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <TextView

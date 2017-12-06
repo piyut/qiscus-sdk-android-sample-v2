@@ -13,7 +13,7 @@ import retrofit2.http.Path;
 
 public interface ApiService {
 
-    @GET("/api/contacts?show_all=true")
+    @GET("/api/contacts")
     Call<JsonObject> getContacts();
 
 }
