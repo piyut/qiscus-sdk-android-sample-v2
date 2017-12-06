@@ -78,7 +78,8 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
         alumnusRepository.setListener(this);
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Please wait...");
-        alumnusList = alumnusRepository.getCachedData();
+        ArrayList<Person> alumnusListTemp = alumnusRepository.getCachedData();
+        alumnusList = new ArrayList<Person>(alumnusListTemp);
         viewChatWithStranger.setVisibility(View.GONE);
         viewGroupCreation.setVisibility(View.GONE);
         nextFab.setVisibility(View.VISIBLE);

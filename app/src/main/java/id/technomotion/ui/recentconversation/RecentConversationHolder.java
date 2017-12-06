@@ -24,7 +24,7 @@ public class RecentConversationHolder extends RecyclerView.ViewHolder implements
     private static final String TAG = "ViewHolder";
     private TextView itemName;
     private TextView itemJob;
-    private ImageView picture;
+    private com.qiscus.sdk.ui.view.QiscusCircularImageView picture;
     private Room selectedRoom;
     private TextView lastMessageTime;
     private TextView unreadCounter;
@@ -33,7 +33,7 @@ public class RecentConversationHolder extends RecyclerView.ViewHolder implements
         super(itemView);
         itemName = (TextView) itemView.findViewById(R.id.textViewRoomName);
         itemJob = (TextView) itemView.findViewById(R.id.textViewJob);
-        picture = (ImageView) itemView.findViewById(R.id.imageViewRoomAvatar);
+        picture = (com.qiscus.sdk.ui.view.QiscusCircularImageView) itemView.findViewById(R.id.imageViewRoomAvatar);
         lastMessageTime = (TextView) itemView.findViewById(R.id.textViewRoomTime);
         unreadCounter = (TextView) itemView.findViewById(R.id.unreadCounterView);
         itemView.setOnClickListener(this);

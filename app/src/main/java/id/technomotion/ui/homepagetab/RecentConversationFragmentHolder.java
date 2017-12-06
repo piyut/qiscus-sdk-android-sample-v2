@@ -8,6 +8,7 @@ package id.technomotion.ui.homepagetab;
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,18 +31,20 @@ public class RecentConversationFragmentHolder extends RecyclerView.ViewHolder im
     private static final String TAG = "ViewHolder";
     private TextView itemName;
     private TextView itemJob;
-    private ImageView picture;
+    private com.qiscus.sdk.ui.view.QiscusCircularImageView picture;
     private Room selectedRoom;
     private TextView lastMessageTime;
     private TextView unreadCounter;
+    private FrameLayout unreadFrame;
 
     public RecentConversationFragmentHolder(View itemView) {
         super(itemView);
         itemName = (TextView) itemView.findViewById(R.id.textViewRoomName);
         itemJob = (TextView) itemView.findViewById(R.id.textViewJob);
-        picture = (ImageView) itemView.findViewById(R.id.imageViewRoomAvatar);
+        picture = (com.qiscus.sdk.ui.view.QiscusCircularImageView) itemView.findViewById(R.id.imageViewRoomAvatar);
         lastMessageTime = (TextView) itemView.findViewById(R.id.textViewRoomTime);
         unreadCounter = (TextView) itemView.findViewById(R.id.unreadCounterView);
+        unreadFrame = (FrameLayout) itemView.findViewById(R.id.unreadCounterFrame);
         itemView.setOnClickListener(this);
     }
 
@@ -52,12 +55,12 @@ public class RecentConversationFragmentHolder extends RecyclerView.ViewHolder im
         this.lastMessageTime.setText(room.getLastMessageTime());
         int unread = room.getUnreadCounter();
         if ( unread > 0) {
-            this.unreadCounter.setVisibility(View.VISIBLE);
+            this.unreadFrame.setVisibility(View.VISIBLE);
             this.unreadCounter.setText(String.valueOf(unread));
         }
         else
         {
-            this.unreadCounter.setVisibility(View.GONE);
+            this.unreadFrame.setVisibility(View.GONE);
         }
         String imagePath = "http://lorempixel.com/200/200/people/" + room.getName();
         imagePath = room.getOnlineImage();
