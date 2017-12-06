@@ -8,12 +8,16 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -50,7 +54,7 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
     private ArrayList<String> contacts = new ArrayList<>();
     private FloatingActionButton nextFab;
     private ProgressDialog progressDialog;
-    public EditText search;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,7 +63,6 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
         setContentView(R.layout.activity_alumni_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        search = (EditText) findViewById( R.id.search);
         toolbar.setVisibility(View.GONE);
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
         this.setTitle("Select Participants");
@@ -90,7 +93,6 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
 
         mSelectedAdapter = new RecyclerSelectedAdapter( selectedList, GroupChatCreationActivity.this);
         mRecyclerViewSelected.setAdapter(mSelectedAdapter);
-        addTextListener();
     }
 
 
@@ -186,6 +188,7 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
             }
         else
             {
+                searchView.onActionViewCollapsed();
                 if (selectedContactIsMoreThanOne()){
                     selectedList.clear();
                     for (Person person: alumnusList){
@@ -226,7 +229,14 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
 
     }
     public boolean onOptionsItemSelected(MenuItem item){
-        onReturn();
+        if (item.getItemId() == R.id.action_search)
+        {
+
+        }
+        else {
+            onReturn();
+        }
+
 
         return true;
     }
@@ -255,15 +265,38 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
     public void onBackPressed() {
         onReturn();
     }
-    public void addTextListener(){
 
-        search.addTextChangedListener(new TextWatcher() {
 
-            public void afterTextChanged(Editable s) {}
+    @Override
+    public void processPerson(String email, boolean selected) {
+        setPersonSelected(email, selected);
+        mAdapter = new RecyclerAdapter(alumnusList,GroupChatCreationActivity.this);
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+    }
 
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    @Override
+    public void onSelectionUnselected(String userEmail) {
+        processPerson(userEmail,false);
+    }
 
-            public void onTextChanged(CharSequence query, int start, int before, int count) {
+    @Override
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+
+        inflater.inflate(R.menu.menu_search, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+
+            public boolean onQueryTextSubmit(String query) {
 
                 query = query.toString().toLowerCase();
 
@@ -280,20 +313,43 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
                 mAdapter = new RecyclerAdapter(filteredList,GroupChatCreationActivity.this);
                 mRecyclerView.setAdapter(mAdapter);
                 mAdapter.notifyDataSetChanged();  // data set changed
+
+                searchView.clearFocus();
+
+
+
+                return true;
+
             }
+
+
+
+            @Override
+
+            public boolean onQueryTextChange(String newText) {
+                newText = newText.toString().toLowerCase();
+
+                final ArrayList<Person> filteredList = new ArrayList<>();
+
+                for (int i = 0; i < alumnusList.size(); i++) {
+
+                    final String text = alumnusList.get(i).getEmail().toLowerCase();
+                    if (text.contains(newText)) {
+
+                        filteredList.add(alumnusList.get(i));
+                    }
+                }
+                mAdapter = new RecyclerAdapter(filteredList,GroupChatCreationActivity.this);
+                mRecyclerView.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();  // data set changed
+
+                return true;
+
+            }
+
         });
-    }
 
-    @Override
-    public void processPerson(String email, boolean selected) {
-        setPersonSelected(email, selected);
-        mAdapter = new RecyclerAdapter(alumnusList,GroupChatCreationActivity.this);
-        mRecyclerView.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
-    }
+        return super.onCreateOptionsMenu(menu);
 
-    @Override
-    public void onSelectionUnselected(String userEmail) {
-        processPerson(userEmail,false);
     }
 }
