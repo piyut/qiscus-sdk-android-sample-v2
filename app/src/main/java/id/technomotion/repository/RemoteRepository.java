@@ -10,6 +10,8 @@ import com.qiscus.sdk.Qiscus;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -90,7 +92,11 @@ public class RemoteRepository  implements Repository {
                 people.add(person);
             }
         }
-
+        Collections.sort(people, new Comparator<Person>() {
+            public int compare(Person o1, Person o2) {
+                return o1.getName().toUpperCase().compareTo(o2.getName().toUpperCase());
+            }
+        });
         return people;
     }
 
