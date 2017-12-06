@@ -15,7 +15,7 @@ import io.realm.Realm;
  * Created by omayib on 18/09/17.
  */
 
-public class SocialAlumniApp extends Application {
+public class SampleApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
