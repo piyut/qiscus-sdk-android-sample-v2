@@ -1,5 +1,9 @@
 package id.technomotion.ui.privatechatcreation;
 
+import android.content.Context;
+import android.graphics.PorterDuff;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
@@ -43,8 +47,26 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         this.selectedContact = person;
         this.itemName.setText(person.getName());
         this.itemJob.setText(person.getJob());
-        String avatarUrl = person.getAvatarUrl();
-        Picasso.with(this.picture.getContext()).load(avatarUrl).into(picture);
+        Context context = this.picture.getContext();
+        if (person.getEmail().equals(PrivateChatCreationActivity.GROUP_CHAT_ID)) {
+            Picasso.with(context).load(R.drawable.ic_create_group).into(picture);
+            picture.setColorFilter(ContextCompat.getColor(context, R.color.orangeIcon), PorterDuff.Mode.MULTIPLY);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                itemName.setTextAppearance(R.style.TextAppearance_AppCompat_Large);
+            }
+        }
+        else if (person.getEmail().equals(PrivateChatCreationActivity.STRANGER_CHAT_ID))
+        {
+            Picasso.with(context).load(R.drawable.ic_stranger).into(picture);
+            picture.setColorFilter(ContextCompat.getColor(context, R.color.orangeIcon), PorterDuff.Mode.MULTIPLY);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                itemName.setTextAppearance(R.style.TextAppearance_AppCompat_Large);
+            }
+        }
+        else {
+            String avatarUrl = person.getAvatarUrl();
+            Picasso.with(this.picture.getContext()).load(avatarUrl).into(picture);
+        }
     }
 
     @Override

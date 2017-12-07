@@ -40,14 +40,17 @@ import retrofit2.HttpException;
  * Created by omayib on 18/09/17.
  */
 
-public class PrivateChatCreationActivity extends AppCompatActivity implements RepositoryTransactionListener, ViewHolder.OnContactClickedListener, View.OnClickListener,ChatWithStrangerDialogFragment.onStrangerNameInputtedListener {
+public class PrivateChatCreationActivity extends AppCompatActivity implements RepositoryTransactionListener, ViewHolder.OnContactClickedListener, ChatWithStrangerDialogFragment.onStrangerNameInputtedListener {
     private static final String TAG = "PrivateChatCreationActivity";
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerAdapter mAdapter;
     private ArrayList<Person> alumnusList;
     private AlumnusRepository alumnusRepository;
-    private View viewGroupCreation,viewChatWithStranger;
+    public static String GROUP_CHAT_ID="GROUP_CHAT_ID";
+    public static String STRANGER_CHAT_ID="STRANGER_CHAT_ID";
+    private Person groupChatHolder = new Person(GROUP_CHAT_ID,"Create Group Chat",GROUP_CHAT_ID,"placeholder");
+    private Person strangerChatHolder = new Person(STRANGER_CHAT_ID,"Chat With Stranger",STRANGER_CHAT_ID,"placeholder");
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,26 +65,26 @@ public class PrivateChatCreationActivity extends AppCompatActivity implements Re
         this.setTitle("Create New Chat");
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        viewGroupCreation = findViewById(R.id.newGroupLayout);
-        viewChatWithStranger = findViewById(R.id.chatWithStrangerLayout);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewAlumni);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         alumnusRepository = new AlumnusRepository();
         alumnusRepository.setListener(this);
+        ArrayList<Person> alumnusListTemp = alumnusRepository.getCachedData();
+        alumnusList = new ArrayList<Person>(alumnusListTemp);
+        //alumnusList = alumnusRepository.getCachedData();
+        alumnusList.add(0,groupChatHolder);
+        alumnusList.add(1,strangerChatHolder);
 
-        alumnusList = alumnusRepository.getCachedData();
         mAdapter = new RecyclerAdapter(alumnusList, this);
         mRecyclerView.setAdapter(mAdapter);
 
-        viewGroupCreation.setOnClickListener(this);
-        viewChatWithStranger.setOnClickListener(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        alumnusRepository.loadAll();
+        //alumnusRepository.loadAll();
     }
 
     @Override
@@ -170,55 +173,49 @@ public class PrivateChatCreationActivity extends AppCompatActivity implements Re
     }
     @Override
     public void onContactClicked(final String userEmail) {
-        new AlertDialog.Builder(this)
-                .setTitle("Confirmation")
-                .setMessage("Are you sure to make a conversation with "+userEmail+" ?")
-                .setCancelable(true)
-                .setPositiveButton("yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Qiscus.buildChatWith(userEmail)
-                                .build(PrivateChatCreationActivity.this, new Qiscus.ChatActivityBuilderListener() {
-                                    @Override
-                                    public void onSuccess(Intent intent) {
-                                        startActivity(intent);
-                                        finish();
-                                    }
+        if (userEmail.equals(GROUP_CHAT_ID))
+        {
+            startActivity(new Intent(this, GroupChatCreationActivity.class));
+            finish();
+        }
 
-                                    @Override
-                                    public void onError(Throwable throwable) {
-                                        throwable.printStackTrace();
-                                    }
-                                });
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                }).show();
+        else if (userEmail.equals(STRANGER_CHAT_ID)) {
+            ChatWithStrangerDialogFragment dialogFragment = new ChatWithStrangerDialogFragment(this);
+            dialogFragment.show(getFragmentManager(),"show_group_name");
+        }
+        else {
+            new AlertDialog.Builder(this)
+                    .setTitle("Confirmation")
+                    .setMessage("Are you sure to make a conversation with " + userEmail + " ?")
+                    .setCancelable(true)
+                    .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Qiscus.buildChatWith(userEmail)
+                                    .build(PrivateChatCreationActivity.this, new Qiscus.ChatActivityBuilderListener() {
+                                        @Override
+                                        public void onSuccess(Intent intent) {
+                                            startActivity(intent);
+                                            finish();
+                                        }
 
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-
-            case R.id.newGroupLayout:
-                startActivity(new Intent(this, GroupChatCreationActivity.class));
-                finish();
-                break;
-
-            case R.id.chatWithStrangerLayout:
-                ChatWithStrangerDialogFragment dialogFragment = new ChatWithStrangerDialogFragment(this);
-                dialogFragment.show(getFragmentManager(),"show_group_name");
-                break;
-            default:
-                break;
+                                        @Override
+                                        public void onError(Throwable throwable) {
+                                            throwable.printStackTrace();
+                                        }
+                                    });
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }).show();
         }
 
     }
+
 
     @Override
     public void onStrangerNameInputted(String email) {

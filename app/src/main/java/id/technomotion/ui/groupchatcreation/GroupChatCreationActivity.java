@@ -21,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.qiscus.sdk.Qiscus;
@@ -50,11 +51,12 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
     private ArrayList<Person> alumnusList;
     private ArrayList<Person> selectedList = new ArrayList<>();
     private AlumnusRepository alumnusRepository;
-    private View viewGroupCreation,viewChatWithStranger;
     private ArrayList<String> contacts = new ArrayList<>();
     private FloatingActionButton nextFab;
     private ProgressDialog progressDialog;
     private SearchView searchView;
+    private View underline;
+    private TextView contactText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,8 +71,6 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         nextFab = (FloatingActionButton) findViewById(R.id.nextFloatingButton);
-        viewGroupCreation = findViewById(R.id.newGroupLayout);
-        viewChatWithStranger = findViewById(R.id.chatWithStrangerLayout);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewAlumni);
         mRecyclerViewSelected = (RecyclerView) findViewById(R.id.recyclerViewSelected);
         mLinearLayoutManager = new LinearLayoutManager(this);
@@ -80,11 +80,18 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
         alumnusRepository = new AlumnusRepository();
         alumnusRepository.setListener(this);
         progressDialog = new ProgressDialog(this);
+        underline = findViewById(R.id.underline);
+        underline.setVisibility(View.VISIBLE);
+        contactText =(TextView) findViewById(R.id.contacts_text);
+        contactText.setVisibility(View.VISIBLE);
+        mRecyclerViewSelected.setVisibility(View.VISIBLE);
         progressDialog.setMessage("Please wait...");
         ArrayList<Person> alumnusListTemp = alumnusRepository.getCachedData();
+        for (Person person : alumnusListTemp) {
+            if (person.isSelected())
+                person.setSelected(false);
+        }
         alumnusList = new ArrayList<Person>(alumnusListTemp);
-        viewChatWithStranger.setVisibility(View.GONE);
-        viewGroupCreation.setVisibility(View.GONE);
         nextFab.setVisibility(View.VISIBLE);
         nextFab.setOnClickListener(this);
         //alumnusRepository.loadAll();
@@ -244,8 +251,10 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
     private void onReturn() {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frameLayout);
         if (currentFragment == null || !currentFragment.isVisible() ) {
+
             startActivity(new Intent(this, PrivateChatCreationActivity.class));
             finish();
+            overridePendingTransition(0,1);
         }
         else {
 //            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
