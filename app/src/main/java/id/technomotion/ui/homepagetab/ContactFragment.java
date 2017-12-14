@@ -76,6 +76,7 @@ public class ContactFragment extends Fragment implements RepositoryTransactionLi
         alumnusList = alumnusRepository.getCachedData();
         mAdapter = new RecyclerAdapter(alumnusList, this);
         mRecyclerView.setAdapter(mAdapter);
+        alumnusRepository.loadAll();
         //Log.d("SIZE", String.valueOf(alumnusList.size()));
 
 
@@ -84,7 +85,7 @@ public class ContactFragment extends Fragment implements RepositoryTransactionLi
     @Override
     public void onResume() {
         super.onResume();
-        alumnusRepository.loadAll();
+
 
     }
 
