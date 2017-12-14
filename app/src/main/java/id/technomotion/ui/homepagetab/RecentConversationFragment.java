@@ -32,6 +32,7 @@ import id.technomotion.model.Room;
 import id.technomotion.ui.login.LoginActivity;
 import id.technomotion.ui.privatechatcreation.PrivateChatCreationActivity;
 import id.technomotion.ui.recentconversation.RecentConversationsActivity;
+import id.technomotion.util.EndlessRecyclerViewScrollListener;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -45,6 +46,7 @@ public class RecentConversationFragment extends Fragment {
     private RecentConversationFragmentRecyclerAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private LinearLayout emptyRoomView;
+    private EndlessRecyclerViewScrollListener scrollListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,8 +82,71 @@ public class RecentConversationFragment extends Fragment {
                 reloadRecentConversation();
             }
         });
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                    /*if (metaTemp != null) {
+                        if (metaTemp.getTotalPage() > metaTemp.getCurrent_page()) {
+                            presenter.getChatrooms(metaTemp.getCurrent_page() + 1);
+                        }
+                    } else {*/
+                addNewConversation(++page);
+                //}
 
+            }
+        };
+        recyclerView.addOnScrollListener(scrollListener);
         reloadRecentConversation();
+    }
+
+    private void addNewConversation(int page) {
+        QiscusApi.getInstance().getChatRooms(page, 20, true)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<QiscusChatRoom>>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.d(TAG, "onCompleted: ");
+                        adapter.notifyDataSetChanged();
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onNext(List<QiscusChatRoom> qiscusChatRooms) {
+                        Log.d(TAG, "onNext: size" + qiscusChatRooms.size());
+                        for (int i = 0; i < qiscusChatRooms.size(); i++) {
+                            QiscusChatRoom currentChatRoom = qiscusChatRooms.get(i);
+                            Room room = new Room(currentChatRoom.getId(), qiscusChatRooms.get(i).getName());
+                            room.setLatestConversation(currentChatRoom.getLastComment().getMessage());
+                            room.setOnlineImage(currentChatRoom.getAvatarUrl());
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                            SimpleDateFormat dateFormatToday = new SimpleDateFormat("hh:mm a");
+                            Date messageDate = currentChatRoom.getLastComment().getTime();
+                            String finalDateFormat = "";
+                            if (DateUtils.isToday(messageDate.getTime())) {
+                                finalDateFormat = dateFormatToday.format(currentChatRoom.getLastComment().getTime());
+                            }
+                            else {
+                                finalDateFormat = dateFormat.format(currentChatRoom.getLastComment().getTime());
+                            }
+                            room.setLastMessageTime(finalDateFormat);
+                            room.setUnreadCounter(currentChatRoom.getUnreadCount());
+                            rooms.add(room);
+                            /*if (!rooms.contains(room)) {
+                                rooms.add(room);
+                            }
+                            else {
+                                rooms.set(rooms.indexOf(room),room);
+                            }*/
+                        }
+                    }
+                });
     }
 
     @Override

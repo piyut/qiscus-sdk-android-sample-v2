@@ -96,7 +96,7 @@ public class RecentConversationsActivity extends AppCompatActivity {
     }
 
     private void addNewConversation(int page) {
-        QiscusApi.getInstance().getChatRooms(page, 2, true)
+        QiscusApi.getInstance().getChatRooms(page, 20, true)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<QiscusChatRoom>>() {
@@ -184,7 +184,7 @@ public class RecentConversationsActivity extends AppCompatActivity {
         if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setRefreshing(true);
         }
-        QiscusApi.getInstance().getChatRooms(1, 2, true)
+        QiscusApi.getInstance().getChatRooms(1, 20, true)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<QiscusChatRoom>>() {
