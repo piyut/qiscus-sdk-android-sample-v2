@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -76,7 +77,7 @@ public class ContactFragment extends Fragment implements RepositoryTransactionLi
         alumnusList = alumnusRepository.getCachedData();
         mAdapter = new RecyclerAdapter(alumnusList, this);
         mRecyclerView.setAdapter(mAdapter);
-        alumnusRepository.loadAll();
+
         //Log.d("SIZE", String.valueOf(alumnusList.size()));
 
 
@@ -86,7 +87,7 @@ public class ContactFragment extends Fragment implements RepositoryTransactionLi
     public void onResume() {
         super.onResume();
 
-
+        alumnusRepository.loadAll();
     }
 
     @Override
@@ -98,13 +99,15 @@ public class ContactFragment extends Fragment implements RepositoryTransactionLi
             mEmptyRoomVIew.setVisibility(View.INVISIBLE);
         }
         //Toast.makeText(this.getContext(), String.valueOf(alumnusList.size()), Toast.LENGTH_SHORT).show();
-
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mAdapter.notifyDataSetChanged();
-            }
-        });
+        FragmentActivity fragmentActivity = getActivity();
+        if (fragmentActivity != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
+        }
 
     }
 

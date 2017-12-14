@@ -11,7 +11,6 @@ import android.os.Handler;
 import id.technomotion.R;
 import id.technomotion.ui.homepagetab.HomePageTabActivity;
 import id.technomotion.ui.login.LoginActivity;
-import id.technomotion.ui.recentconversation.RecentConversationsActivity;
 
 public class SplashScreen extends AppCompatActivity {
     private static int splashInterval = 10;

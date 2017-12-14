@@ -39,7 +39,6 @@ import java.util.List;
 
 import id.technomotion.R;
 import id.technomotion.ui.homepagetab.HomePageTabActivity;
-import id.technomotion.ui.recentconversation.RecentConversationsActivity;
 import retrofit2.HttpException;
 
 import static android.Manifest.permission.READ_CONTACTS;

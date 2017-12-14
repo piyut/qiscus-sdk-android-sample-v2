@@ -17,9 +17,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.qiscus.sdk.Qiscus;
 import com.qiscus.sdk.data.model.QiscusChatRoom;
+import com.qiscus.sdk.data.model.QiscusComment;
 import com.qiscus.sdk.data.remote.QiscusApi;
 
 import java.text.SimpleDateFormat;
@@ -28,16 +30,17 @@ import java.util.Date;
 import java.util.List;
 
 import id.technomotion.R;
+import id.technomotion.SampleApp;
 import id.technomotion.model.Room;
 import id.technomotion.ui.login.LoginActivity;
 import id.technomotion.ui.privatechatcreation.PrivateChatCreationActivity;
-import id.technomotion.ui.recentconversation.RecentConversationsActivity;
 import id.technomotion.util.EndlessRecyclerViewScrollListener;
+import id.technomotion.util.RealTimeChatroomHandler;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class RecentConversationFragment extends Fragment {
+public class RecentConversationFragment extends Fragment implements RealTimeChatroomHandler.Listener {
     private static final String TAG = "RecentConversationsActi";
     private FloatingActionButton fabCreateNewConversation;
     private RecyclerView recyclerView;
@@ -56,7 +59,7 @@ public class RecentConversationFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        SampleApp.getInstance().getChatroomHandler().setListener(this);
         View v = getView();
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerRecentConversation);
         linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
@@ -72,16 +75,11 @@ public class RecentConversationFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
+        emptyRoomView = (LinearLayout) v.findViewById(R.id.empty_room_view);
         adapter = new  RecentConversationFragmentRecyclerAdapter(rooms);
         recyclerView.setAdapter(adapter);
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                reloadRecentConversation();
-            }
-        });
+
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -95,11 +93,20 @@ public class RecentConversationFragment extends Fragment {
 
             }
         };
+
+
         recyclerView.addOnScrollListener(scrollListener);
-        reloadRecentConversation();
+        //reloadRecentConversation();
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                scrollListener.resetState();
+                reloadRecentConversation();
+            }
+        });
     }
 
-    private void addNewConversation(int page) {
+    private void addNewConversation(final int page) {
         QiscusApi.getInstance().getChatRooms(page, 20, true)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -119,7 +126,14 @@ public class RecentConversationFragment extends Fragment {
 
                     @Override
                     public void onNext(List<QiscusChatRoom> qiscusChatRooms) {
+                        if (page==1) {
+                            rooms.clear();
+                        }
                         Log.d(TAG, "onNext: size" + qiscusChatRooms.size());
+                        int roomCount = qiscusChatRooms.size();
+                        if (roomCount > 0) {
+                            emptyRoomView.setVisibility(View.GONE);
+                        }
                         for (int i = 0; i < qiscusChatRooms.size(); i++) {
                             QiscusChatRoom currentChatRoom = qiscusChatRooms.get(i);
                             Room room = new Room(currentChatRoom.getId(), qiscusChatRooms.get(i).getName());
@@ -160,62 +174,41 @@ public class RecentConversationFragment extends Fragment {
         }
     }
 
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        SampleApp.getInstance().getChatroomHandler().removeListener();
+    }
     public void reloadRecentConversation() {
-        View v = getView();
-        emptyRoomView = (LinearLayout) v.findViewById(R.id.empty_room_view);
+
         if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setRefreshing(true);
         }
-        QiscusApi.getInstance().getChatRooms(1, 20, true)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<QiscusChatRoom>>() {
-                    @Override
-                    public void onCompleted() {
-                        Log.d(TAG, "onCompleted: ");
-                        adapter.notifyDataSetChanged();
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
+        addNewConversation(1);
+    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
+    @Override
+    public void onReceiveComment(QiscusComment comment) {
+        int commentId= comment.getRoomId();
+        for(Room room: rooms) {
+            if ( room.getId() == commentId) {
+                int unread = room.getUnreadCounter();
+                room.setUnreadCounter(unread+1);
+                room.setLatestConversation(comment.getMessage());
 
-                    @Override
-                    public void onNext(List<QiscusChatRoom> qiscusChatRooms) {
-                        Log.d(TAG, "onNext: size" + qiscusChatRooms.size());
-                        rooms.clear();
-                        int roomCount = qiscusChatRooms.size();
-                        if (roomCount > 0) {
-                            emptyRoomView.setVisibility(View.GONE);
-                        }
-                        for (int i = 0; i < qiscusChatRooms.size(); i++) {
-                            QiscusChatRoom currentChatRoom = qiscusChatRooms.get(i);
-                            Room room = new Room(currentChatRoom.getId(), qiscusChatRooms.get(i).getName());
-                            room.setLatestConversation(currentChatRoom.getLastComment().getMessage());
-                            room.setOnlineImage(currentChatRoom.getAvatarUrl());
-                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-                            SimpleDateFormat dateFormatToday = new SimpleDateFormat("hh:mm a");
-                            Date messageDate = currentChatRoom.getLastComment().getTime();
-                            String finalDateFormat = "";
-                            if (DateUtils.isToday(messageDate.getTime())) {
-                                finalDateFormat = dateFormatToday.format(currentChatRoom.getLastComment().getTime());
-                            } else {
-                                finalDateFormat = dateFormat.format(currentChatRoom.getLastComment().getTime());
-                            }
-                            room.setLastMessageTime(finalDateFormat);
-                            room.setUnreadCounter(currentChatRoom.getUnreadCount());
-                            rooms.add(room);
-                            /*if (!rooms.contains(room)) {
-                                rooms.add(room);
-                            }
-                            else {
-                                rooms.set(rooms.indexOf(room),room);
-                            }*/
-                        }
-                    }
-                });
+                String finalDateFormat = "";
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                SimpleDateFormat dateFormatToday = new SimpleDateFormat("hh:mm a");
+                if (DateUtils.isToday(comment.getTime().getTime())) {
+                    finalDateFormat = dateFormatToday.format(comment.getTime());
+                } else {
+                    finalDateFormat = dateFormat.format(comment.getTime());
+                }
+                room.setLastMessageTime(finalDateFormat);
+
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
 }

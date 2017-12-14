@@ -13,8 +13,6 @@ import com.qiscus.sdk.Qiscus;
 
 import id.technomotion.R;
 import id.technomotion.ui.login.LoginActivity;
-import id.technomotion.ui.recentconversation.RecentConversationsActivity;
-
 
 public class HomePageTabActivity extends AppCompatActivity {
     ViewPager viewPager;
