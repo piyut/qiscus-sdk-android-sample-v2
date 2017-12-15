@@ -313,7 +313,7 @@ public class GroupChatCreationActivity extends AppCompatActivity implements Repo
 
                 for (int i = 0; i < alumnusList.size(); i++) {
 
-                    final String text = alumnusList.get(i).getEmail().toLowerCase();
+                    final String text = alumnusList.get(i).getName().toLowerCase();
                     if (text.contains(query)) {
 
                         filteredList.add(alumnusList.get(i));

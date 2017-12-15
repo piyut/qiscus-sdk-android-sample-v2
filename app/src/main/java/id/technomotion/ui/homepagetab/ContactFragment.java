@@ -243,7 +243,7 @@ public class ContactFragment extends Fragment implements RepositoryTransactionLi
 
                 for (int i = 0; i < alumnusList.size(); i++) {
 
-                    final String text = alumnusList.get(i).getEmail().toLowerCase();
+                    final String text = alumnusList.get(i).getName().toLowerCase();
                     if (text.contains(newText)) {
 
                         filteredList.add(alumnusList.get(i));

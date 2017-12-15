@@ -100,7 +100,6 @@ public class RecentConversationFragment extends Fragment implements RealTimeChat
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                scrollListener.resetState();
                 reloadRecentConversation();
             }
         });
@@ -185,6 +184,7 @@ public class RecentConversationFragment extends Fragment implements RealTimeChat
         if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setRefreshing(true);
         }
+        scrollListener.resetState();
         addNewConversation(1);
     }
 
