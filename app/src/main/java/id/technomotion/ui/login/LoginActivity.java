@@ -81,6 +81,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
     private Button mEmailSignInButton;
+    private EditText mDisplayNameView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +90,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
+        mDisplayNameView = (EditText) findViewById(R.id.display_name);
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -174,6 +176,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+        String displayName = mDisplayNameView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -203,7 +206,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //            mAuthTask = new UserLoginTask(email, password);
 //            mAuthTask.execute((Void) null);
             Qiscus.setUser(email,password)
-                    .withAvatarUrl("http://lorempixel.com/200/200/people/"+ email)
+                    .withAvatarUrl("https://robohash.org/"+email+"/bgset_bg2/3.14160?set=set4")
+                    .withUsername(displayName)
                     .save(new Qiscus.SetUserListener() {
                         @Override
                         public void onSuccess(QiscusAccount qiscusAccount) {

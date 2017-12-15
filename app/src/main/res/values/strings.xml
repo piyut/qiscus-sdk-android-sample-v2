@@ -4,6 +4,7 @@
     <!-- Strings related to login -->
     <string name="prompt_email">Type Username Here</string>
     <string name="prompt_password">Type Password Here</string>
+    <string name="prompt_displayname">Type Display Name Here</string>
     <string name="action_sign_in">LOGIN</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
