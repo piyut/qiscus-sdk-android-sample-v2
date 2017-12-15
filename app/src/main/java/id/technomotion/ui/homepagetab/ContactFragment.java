@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -54,6 +55,7 @@ public class ContactFragment extends Fragment implements RepositoryTransactionLi
     private ArrayList<Person> alumnusList;
     private AlumnusRepository alumnusRepository;
     private LinearLayout mEmptyRoomVIew;
+    private SwipeRefreshLayout swipeContactRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,13 +75,19 @@ public class ContactFragment extends Fragment implements RepositoryTransactionLi
         alumnusRepository = new AlumnusRepository();
         alumnusRepository.setListener(this);
         mEmptyRoomVIew = (LinearLayout) v.findViewById(R.id.empty_contact_view);
-
+        swipeContactRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeContactRefreshLayout);
         alumnusList = alumnusRepository.getCachedData();
         mAdapter = new RecyclerAdapter(alumnusList, this);
         mRecyclerView.setAdapter(mAdapter);
-
+        alumnusRepository.loadAll();
         //Log.d("SIZE", String.valueOf(alumnusList.size()));
+        swipeContactRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                alumnusRepository.loadAll();
 
+            }
+        });
 
     }
 
@@ -87,11 +95,14 @@ public class ContactFragment extends Fragment implements RepositoryTransactionLi
     public void onResume() {
         super.onResume();
 
-        alumnusRepository.loadAll();
+
     }
 
     @Override
     public void onLoadAlumnusSucceeded(List<Person> alumnus) {
+        if (swipeContactRefreshLayout != null) {
+            swipeContactRefreshLayout.setRefreshing(false);
+        }
         if (alumnusList.isEmpty()) {
             mEmptyRoomVIew.setVisibility(View.VISIBLE);
         }

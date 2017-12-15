@@ -65,7 +65,7 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
         else {
             String avatarUrl = person.getAvatarUrl();
-            Picasso.with(this.picture.getContext()).load(avatarUrl).into(picture);
+            Picasso.with(this.picture.getContext()).load(avatarUrl).fit().centerCrop().into(picture);
         }
     }
 

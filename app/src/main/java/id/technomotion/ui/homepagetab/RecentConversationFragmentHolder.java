@@ -51,7 +51,12 @@ public class RecentConversationFragmentHolder extends RecyclerView.ViewHolder im
     public void bindRecentConversation(Room room){
         this.selectedRoom = room;
         this.itemName.setText(room.getName());
-        this.itemJob.setText(room.getLatestConversation());
+        String latestConversation = room.getLatestConversation();
+        if (latestConversation.contains("[file]")) {
+            latestConversation = "File Attachment";
+        }
+        this.itemJob.setText(latestConversation);
+
         this.lastMessageTime.setText(room.getLastMessageTime());
         int unread = room.getUnreadCounter();
         if ( unread > 0) {
@@ -64,7 +69,7 @@ public class RecentConversationFragmentHolder extends RecyclerView.ViewHolder im
         }
         String imagePath = "http://lorempixel.com/200/200/people/" + room.getName();
         imagePath = room.getOnlineImage();
-        Picasso.with(this.picture.getContext()).load(imagePath).into(picture);
+        Picasso.with(this.picture.getContext()).load(imagePath).fit().centerCrop().into(picture);
     }
 
     @Override

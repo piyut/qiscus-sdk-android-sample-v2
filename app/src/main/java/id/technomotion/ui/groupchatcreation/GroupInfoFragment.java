@@ -1,10 +1,14 @@
 package id.technomotion.ui.groupchatcreation;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -80,6 +84,7 @@ public class GroupInfoFragment extends Fragment implements View.OnClickListener,
     private Toast mToast;
     private FloatingActionButton nextFab;
     private EditText groupNameView;
+    private View mProgressView;
 
     public GroupInfoFragment() {
         // Required empty public constructor
@@ -116,6 +121,7 @@ public class GroupInfoFragment extends Fragment implements View.OnClickListener,
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         contacts = (ArrayList<String>) getArguments().getSerializable(
                 CONTACT_KEY);
         personList = (ArrayList<Person>) getArguments().getSerializable(
@@ -129,6 +135,7 @@ public class GroupInfoFragment extends Fragment implements View.OnClickListener,
         View view = inflater.inflate(R.layout.fragment_group_info, container, false);
         nextFab = (FloatingActionButton) view.findViewById(R.id.nextFragmentFloatingButton);
         nextFab.setOnClickListener(this);
+        mProgressView = view.findViewById(R.id.upload_progress);
         uploadIcon = (com.qiscus.sdk.ui.view.QiscusCircularImageView) view.findViewById(R.id.upload_icon);
         uploadIcon.setOnClickListener(this);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewSelected);
@@ -230,6 +237,35 @@ public class GroupInfoFragment extends Fragment implements View.OnClickListener,
         return this.contacts.size() > 0;
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            View view = getActivity().findViewById(R.id.nextFloatingButton);
+            view.setVisibility(show ? View.GONE : View.VISIBLE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            View view = getActivity().findViewById(R.id.nextFloatingButton);
+            view.setVisibility(show ? View.GONE : View.VISIBLE);
+
+        }
+    }
+
     @SuppressLint("LongLogTag")
     private void createGroupChat(String groupName) {
         progressDialog.show();
@@ -298,6 +334,8 @@ public class GroupInfoFragment extends Fragment implements View.OnClickListener,
             if (resultCode == Activity.RESULT_OK) {
                 Uri processedPhoto = (Uri.parse(QiscusCacheManager.getInstance().getLastImagePath()));
                 String imagePath = FileUtil.getRealPathFromUri(getContext(), processedPhoto);
+
+
                 processImage(imagePath);
             }
 
@@ -306,16 +344,20 @@ public class GroupInfoFragment extends Fragment implements View.OnClickListener,
 
     private void processImage(String imagePath) {
         File theFile = new File(imagePath);
+        showProgress(true);
         sendFile(theFile, new Callback() {
             @Override
             public void onSuccessGetUri(String uri) {
                 avatarUrl = uri;
                 ImageView groupPictureHolder = (ImageView) getView().findViewById(R.id.group_avatar);
-                Picasso.with(groupPictureHolder.getContext()).load(avatarUrl).into(groupPictureHolder);
+
+                Picasso.with(groupPictureHolder.getContext()).load(avatarUrl).fit().centerCrop().into(groupPictureHolder);
+                showProgress(false);
             }
 
             @Override
             public void onFailiedGetUri(Throwable throwable) {
+                showProgress(false);
                 showToast("An error occured please try again");
             }
         });

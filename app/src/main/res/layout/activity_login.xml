@@ -22,12 +22,7 @@
                 android:id="@+id/top_view"
                 >
             </View>
-            <ImageView
-                android:layout_marginTop="16dp"
-                android:layout_centerHorizontal="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_logo_qiscus"/>
+
         </RelativeLayout>
 
 
@@ -48,6 +43,14 @@
         android:layout_centerInParent="true"/>
 
 
+        <ImageView
+            android:layout_above="@id/login_form"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_logo_qiscus"/>
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
@@ -134,6 +137,7 @@
         </LinearLayout>
 
     </ScrollView>
+
     <Button
         android:layout_below="@id/login_form"
         android:id="@+id/email_sign_in_button"

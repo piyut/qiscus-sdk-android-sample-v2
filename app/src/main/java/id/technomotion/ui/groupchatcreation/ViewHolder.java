@@ -57,7 +57,7 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         this.itemName.setText(person.getName());
         this.itemJob.setText(person.getJob());
         String avatarUrl = person.getAvatarUrl();
-        Picasso.with(this.picture.getContext()).load(avatarUrl).into(picture);
+        Picasso.with(this.picture.getContext()).load(avatarUrl).fit().centerCrop().into(picture);
         //Picasso.with(this.picture.getContext()).load("http://lorempixel.com/200/200/people/"+ person.getName()).into(picture);
     }
 
