@@ -107,7 +107,7 @@ public class RecentConversationFragment extends Fragment implements RealTimeChat
     }
 
     private void addNewConversation(final int page) {
-        QiscusApi.getInstance().getChatRooms(page, 120, true)
+        QiscusApi.getInstance().getChatRooms(page, 20, true)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<QiscusChatRoom>>() {
