@@ -49,7 +49,7 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         this.itemJob.setText(person.getJob());
         Context context = this.picture.getContext();
         if (person.getEmail().equals(PrivateChatCreationActivity.GROUP_CHAT_ID)) {
-            Picasso.with(context).load(R.drawable.ic_create_group).into(picture);
+            Picasso.with(context).load(R.drawable.ic_create_group).fit().centerCrop().into(picture);
             picture.setColorFilter(ContextCompat.getColor(context, R.color.orangeIcon), PorterDuff.Mode.MULTIPLY);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 itemName.setTextAppearance(R.style.TextAppearance_AppCompat_Large);
@@ -57,7 +57,7 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
         else if (person.getEmail().equals(PrivateChatCreationActivity.STRANGER_CHAT_ID))
         {
-            Picasso.with(context).load(R.drawable.ic_stranger).into(picture);
+            Picasso.with(context).load(R.drawable.ic_stranger).fit().centerCrop().into(picture);
             picture.setColorFilter(ContextCompat.getColor(context, R.color.orangeIcon), PorterDuff.Mode.MULTIPLY);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 itemName.setTextAppearance(R.style.TextAppearance_AppCompat_Large);

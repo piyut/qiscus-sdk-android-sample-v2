@@ -61,8 +61,8 @@ public class HomePageTabActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         //gotoContact
         switch (item.getItemId()) {
-            case R.id.logout_menu:
-                logout();
+            case R.id.profileIcon:
+                startActivity(new Intent(HomePageTabActivity.this, ProfileActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

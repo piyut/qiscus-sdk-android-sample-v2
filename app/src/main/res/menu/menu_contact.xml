@@ -2,17 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/iconHamburger"
+        android:id="@+id/profileIcon"
         app:showAsAction="ifRoom|withText"
-        android:title="&#8942;">
-    <menu>
-        <item
-            android:id="@+id/logout_menu"
-            android:visible="true"
-            android:orderInCategory="1"
-            app:showAsAction="ifRoom|withText"
-            android:title="Log Out" />
-    </menu>
+        android:title="profile"
+        android:visible="true"
+        android:orderInCategory="1">
+
     </item>
 
 </menu>
